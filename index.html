@@ -56,16 +56,12 @@
                 indo.style.display = 'block';
 
                 const reader = new FileReader();
-                reader.oload = function(e) {
+                reader.onload = function(e) {
                     prebiew.src = e.target.result;
                     prebiew.style.display = 'inline-block';
                 }
                 reader.readAsDataURL(file);
             }
-            // if (input.files.length > 0) {
-            //     name.textContent = input.files[0].name;
-            //     info.style.display = 'block';
-            // }
         }
     </script>
 </body>
