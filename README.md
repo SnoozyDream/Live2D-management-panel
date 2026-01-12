@@ -1,1 +1,1 @@
-# Live2D-admin-panel
+# Live2D-management-panel
