@@ -36,18 +36,36 @@
                 <strong>選択されたファイル:</strong> <span id="file-name"></span>
                 <br><small>※現在はプレビューモードのため、サーバーへの保存は行われません。</small>
             </div>
+
+            <div id="preview-container" style="margin-top: 20px; text-align: center;">
+                <img id="image-preview" style="max-width: 100%; border-radius: 8px; display: none;">
+            </div>
         </div>
     </main>
 
     <script>
         function showFileInfo() {
             const input = document.getElementById('file-input');
-            const info = document.getElementById('file-info');
+            const preview = document.getElementById('image-preview');
             const name = document.getElementById('file-name');
-            if (input.files.length > 0) {
-                name.textContent = input.files[0].name;
-                info.style.display = 'block';
+            const info = document.getElementById('file-info');
+
+            const file = input.files[0];
+            if (file){
+                name.textContent = file.name;
+                indo.style.display = 'block';
+
+                const reader = new FileReader();
+                reader.oload = function(e) {
+                    prebiew.src = e.target.result;
+                    prebiew.style.display = 'inline-block';
+                }
+                reader.readAsDataURL(file);
             }
+            // if (input.files.length > 0) {
+            //     name.textContent = input.files[0].name;
+            //     info.style.display = 'block';
+            // }
         }
     </script>
 </body>
