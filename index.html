@@ -8,31 +8,47 @@
         body { font-family: sans-serif; background: #f0f2f5; margin: 0; display: flex; }
         nav { width: 200px; background: #1a1a2e; color: white; height: 100vh; padding: 20px; }
         main { flex: 1; padding: 40px; }
-        .card { background: white; padding: 20px; border-radius: 8px; shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        h1 { color: #1a1a2e; }
-        .status { color: green; font-weight: bold; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { color: #1a1a2e; margin-top: 0; }
+        .upload-area { border: 2px dashed #ccc; padding: 30px; text-align: center; border-radius: 8px; background: #fafafa; cursor: pointer; transition: 0.3s; }
+        .upload-area:hover { border-color: #1a1a2e; background: #f0f7ff; }
+        #file-info { margin-top: 20px; padding: 10px; background: #e7f3ff; border-radius: 4px; display: none; }
     </style>
 </head>
 <body>
     <nav>
-        <h2>Admin</h2>
-        <p>Dashboard</p>
-        <p>Characters</p>
-        <p>Assets</p>
+        <h3>Liver App</h3>
+        <p>📊 ダッシュボード</p>
+        <p>👥 ライバー管理</p>
+        <p>📦 アセット登録</p>
     </nav>
     <main>
         <div class="card">
-            <h1>Live2D Asset Management System</h1>
-            <p>ユーザー：<strong>Snoozy</strong></p>
-            <p>システム状態：<span class="status">オンライン (Running)</span></p>
-            <hr>
-            <h3>Next ToDo:</h3>
-            <ul>
-                <li>Live2D Cubism SDK for Web の組み込み</li>
-                <li>小春ちゃんモデルの表示テスト</li>
-                <li>アセットアップロード機能の実装</li>
-            </ul>
+            <h1>Live2D アセット新規登録</h1>
+            <p>モデルデータ（.moc3）やテクスチャをアップロードしてください。</p>
+            
+            <div class="upload-area" onclick="document.getElementById('file-input').click()">
+                <p>📁 クリックしてファイルを選択、またはドラッグ＆ドロップ</p>
+                <input type="file" id="file-input" style="display: none;" onchange="showFileInfo()">
+            </div>
+
+            <div id="file-info">
+                <strong>選択されたファイル:</strong> <span id="file-name"></span>
+                <br><small>※現在はプレビューモードのため、サーバーへの保存は行われません。</small>
+            </div>
         </div>
     </main>
+
+    <script>
+        function showFileInfo() {
+            const input = document.getElementById('file-input');
+            const info = document.getElementById('file-info');
+            const name = document.getElementById('file-name');
+            if (input.files.length > 0) {
+                name.textContent = input.files[0].name;
+                info.style.display = 'block';
+            }
+        }
+    </script>
 </body>
 </html>
