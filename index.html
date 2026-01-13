@@ -1,39 +1,35 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live2D Asset Manager | Portfolio</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <nav>
-        <h3>ライバー管理アプリ</h3>
-        <p><a href="index.html" style="color: white; text-decoration: none;">📊 ダッシュボード</a></p>
-        <p><a href="permissions.html" style="color: white; text-decoration: none;">👥 衣装権限管理</a></p>
-        <p><a href="assets.html" style="color: white; text-decoration: none;">📦 アセット登録</a></p>
-    </nav>
-   
-    <script>
-        function showFileInfo() {
-            const input = document.getElementById('file-input');
-            const preview = document.getElementById('image-preview');
-            const name = document.getElementById('file-name');
-            const info = document.getElementById('file-info');
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Live2D Asset Manager | Portfolio</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <nav>
+            <h3>ライバー管理アプリ</h3>
+            <p><a href="index.html" style="color: white; text-decoration: none;">📊 ダッシュボード</a></p>
+            <p><a href="permissions.html" style="color: white; text-decoration: none;">👥 衣装権限管理</a></p>
+            <p><a href="assets.html" style="color: white; text-decoration: none;">📦 アセット登録</a></p>
+        </nav>
+     <main>
+        <div class="card">
+            <h1>📊 ダッシュボード</h1>
+            <p>ようこそ、管理画面へ。現在のプロジェクト状況です。</p>
 
-            const file = input.files[0];
-            if (file){
-                name.textContent = file.name;
-                info.style.display = 'block';
-
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    preview.style.display = 'inline-block';
-                }
-                reader.readAsDataURL(file);
-            }
-        }
-    </script>
-</body>
+            <div style="display: flex; gap: 20px; margin-top: 20px;">
+                <div style="flex: 1; padding: 20px; background: #e7f3ff; border-radius: 8px; text-align: center;">
+                    <strong>登録ライバー数</strong><br>
+                    <span style="font-size: 24px;">12 名</span>
+                </div>
+                <div style="flex: 1; padding: 20px; background: #e7f3ff; border-radius: 8px; text-align: center;">
+                    <strong>未承認アセット</strong><br>
+                    <span style="font-size: 24px;">3 件</span>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    </body>
 </html>
