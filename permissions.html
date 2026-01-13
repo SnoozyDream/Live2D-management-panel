@@ -1,1 +1,44 @@
 
+ <main>
+        <div class="card">
+            <h1>👥 衣装権限管理システム</h1>
+            <p>ライバーごとの新衣装・アセットの利用権限を制御します。</p>
+            
+            <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                <tr style="background: #1a1a2e; color: white;">
+                  <th style="padding: 12px; text-align: left;">ライバー名</th>
+                  <th style="padding: 12px; text-align: left;">所有衣装</th>
+                  <th style="padding: 12px; text-align: left;">ステータス</th>
+                  <th style="padding: 12px; text-align: left;">操作</th>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                  <td style="padding: 12px;">koharu</td>
+                  <td style="padding: 12px;">通常、冬服、部屋着</td>
+                  <td style="padding: 12px;"><span style="color: #27ae60;">● 利用可能</span></td>
+                  <td style="padding: 12px;"><button>編集</button></td>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                  <td style="padding: 12px;">Mao</td>
+                  <td style="padding: 12px;">標準制服</td>
+                  <td style="padding: 12px;"><span style="color: #f39c12;">⚠ 承認待ち</span></td>
+                  <td style="padding: 12px;"><button>編集</button></td>
+                </tr>
+            </table>
+          
+            <div class="upload-area" onclick="document.getElementById('file-input').click()">
+                <p>📁 クリックしてファイルを選択、またはドラッグ＆ドロップ</p>
+                <input type="file" id="file-input" style="display: none;" onchange="showFileInfo()">
+            </div>
+
+            <div id="file-info">
+                <strong>選択されたファイル:</strong> <span id="file-name"></span>
+                <br><small>※現在はプレビューモードのため、サーバーへの保存は行われません。</small>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <button style="padding: 10px 20px; background: #1a1a2e; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                    + 新規ライバー権限を追加
+                </button>
+            </div>
+        </div>
+    </main>
