@@ -22,27 +22,7 @@
         <p><a href="permissions.html" style="color: white; text-decoration: none;">👥 衣装権限管理</a></p>
         <p><a href="assets.html" style="color: white; text-decoration: none;">📦 アセット登録</a></p>
     </nav>
-    <main>
-        <div class="card">
-            <h1>Live2D アセット新規登録</h1>
-            <p>モデルデータ（.moc3）やテクスチャをアップロードしてください。</p>
-            
-            <div class="upload-area" onclick="document.getElementById('file-input').click()">
-                <p>📁 クリックしてファイルを選択、またはドラッグ＆ドロップ</p>
-                <input type="file" id="file-input" style="display: none;" onchange="showFileInfo()">
-            </div>
-
-            <div id="file-info">
-                <strong>選択されたファイル:</strong> <span id="file-name"></span>
-                <br><small>※現在はプレビューモードのため、サーバーへの保存は行われません。</small>
-            </div>
-
-            <div id="preview-container" style="margin-top: 20px; text-align: center;">
-                <img id="image-preview" style="max-width: 100%; border-radius: 8px; display: none;">
-            </div>
-        </div>
-    </main>
-
+   
     <script>
         function showFileInfo() {
             const input = document.getElementById('file-input');
