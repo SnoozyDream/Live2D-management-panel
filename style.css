@@ -1,18 +1,85 @@
 /* --- 共通レイアウト --- */
-body { font-family: sans-serif; background: #f0f2f5; margin: 0; display: flex; }
-nav { width: 200px; background: #1a1a2e; color: white; min-height: 100vh; padding: 20px; }
-nav a { color: white; text-decoration: none; display: block; margin-bottom: 15px; opacity: 0.8; }
-nav a:hover { opacity: 1; }
-main { flex: 1; padding: 40px; }
-.card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-h1 { color: #1a1a2e; margin-top: 0; }
+body { 
+    font-family: sans-serif; 
+    background: #f0f2f5; 
+    margin: 0; 
+    display: flex; 
+    min-height: 100vh;
+}
+/* サイドメニュー */
+nav { 
+    width: 220px; 
+    background: #1a1a2e; 
+    color: white; 
+    padding: 20px; 
+    flex-shrink: 0; /* メニュー消失対策 */
+}
+nav h3 { 
+    border-bottom: 1px solid #3e3e5e; 
+    padding-bottom: 10px; 
+    margin-bottom: 20px; 
+}
+nav a, nav p a { 
+    color: white; 
+    text-decoration: none; 
+    display: block; 
+    padding: 10px 0;
+    opacity: 0.8; 
+    transition: 0.3s;
+}
+nav a:hover, nav p a:hover { 
+    opacity: 1; 
+    padding-left: 5px;
+}
+/* メインコンテンツ */
+main { 
+    flex: 1; 
+    padding: 40px; 
+}
+.card { 
+    background: white; 
+    padding: 25px; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+}
+h1 { color: #1a1a2e; 
+    margin-top: 0;
+    font-size: 1.8rem;
+}
 
-/* --- index.html用 --- */
-.upload-area { border: 2px dashed #ccc; padding: 30px; text-align: center; border-radius: 8px; background: #fafafa; cursor: pointer; transition: 0.3s; }
-.upload-area:hover { border-color: #1a1a2e; background: #f0f7ff; }
-#file-info { margin-top: 20px; padding: 10px; background: #e7f3ff; border-radius: 4px; display: none; }
+/* --- index --- */
+main div[style*="display: flex"] {
+    margin-top: 30px;
+}
 
-/* --- permissions.html用 --- */
-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-th { background: #1a1a2e; color: white; padding: 12px; text-align: left; }
-td { padding: 12px; border-bottom: 1px solid #ddd; }
+/* --- permissions --- */
+table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    margin-top: 20px; 
+}
+
+th { 
+    background: #1a1a2e; 
+    color: white; 
+    padding: 12px; 
+    text-align: left; 
+}
+
+td { 
+    padding: 12px; 
+    border-bottom: 1px solid #ddd; 
+}
+
+tr:hover { 
+    background-color: #f9f9f9;
+}
+
+button { 
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover { 
+    opacity: 0.8; 
+}
