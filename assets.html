@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+  <main class="assets-container">
+    <aside class="model-list">
+      <button id="btn-new">新規モデル登録</button>
+      <ul id="list-items"></ul>
+    </aside>
+
+    <section class="upload-section">
+      <h2>モデル設定</h2>
+      <div id="drop-zone">
+        ファイルをドラッグ＆ドロップして追加
+      <p class="file-hint">.moc3, .json, .png を選択してください</p>
+      </div>
+      <form id="asset-form">
+        <input type="text" placeholder="モデル名（例:通常衣装）">
+        <button type="submit">設定を保存</button>
+      </form>
+    </section>
+      
+    <section class="preview-section">
+      <canvas id="live2d-canvas"></canvas>
+      <div class="contols">
+        <button onclick="playMotion()">モーション再生</button>
+      </div>
+    </section>
+  </main>
