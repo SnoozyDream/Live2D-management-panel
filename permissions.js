@@ -2,6 +2,8 @@
 
 document.addEventListener('DOMContentLoaded',function() {
     const tableBody = document.getElementById('liver-table-body');
+    
+    //tablebodyが見つからない場合は処理を中断
     if(!tableBody) return;
 
   //デフォルトのライバーデータ
@@ -19,8 +21,10 @@ document.addEventListener('DOMContentLoaded',function() {
         livers[0].costumes += '、${newNames = newCostumes}';
   }
 
-  //HMTLを組み立ててテーブルに流し込む
-  tableBody.innerHTML = livers.map(liver => `
+  //テーブルのhtmlを組み立てる
+  let htmlContent = '';
+  livers.forEach(liver => {
+      htmlContent += `
         <tr>
             <td>${liver.name}</td>
             <td>${liver.costumes}</td>
@@ -30,5 +34,9 @@ document.addEventListener('DOMContentLoaded',function() {
                 <a href="assets.html" class="btn-live2d">Live2D設定</a>
             </td>
         </tr>
-    `).join('');
+        `;
+  });
+
+   //テーブルに流し込む
+   tableBody.innerHTML = htmlContent;
   });
