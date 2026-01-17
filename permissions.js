@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded',function() {
     ];
 
   //assets.jsで保存したデータを取得(live2d_models)
-  const savedModels = JSON.parse(localStorage.geiItem('live2d_models') || '[]');
+  const savedModels = JSON.parse(localStorage.getItem('live2d_models') || '[]');
   
   //保存データがあれば一人目に衣装を追加する
   if (savedModels.length > 0) {
