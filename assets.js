@@ -22,20 +22,29 @@ function loadModels() {
 
 
 assetForm.addEventListener('submit', (e) => {
-    e.preventDefault();
+    e.preventDefault();//<form>のリロードを止める
+    
     const nameInput = assetForm.querySelector('input[type="text"]');
-    const newModel = {
-        name: nameInput.value,
-        timestamp: new Date().getTime()
-    };
+    const newModelName = nameInput.value;
 
-    const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    data.push(newModel);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    //既存の衣装リストを取得（共通のキーを使用する）
+    const storagekey = 'costum_list';
+    const currentData = JSON.parse(localStorage.getItem(storageKey) || '[]');
 
-    nameInput.value = '';
-    loadModels(); 
-    alert('モデルを登録しました！');
+    //新しい衣装データを追加
+    currentData.push({
+        name: newModelName,
+        status:'有効',
+        date: new Date().toLocaleDateString()
+    });
+
+    //保存
+    localStorage.setItem(storageKey,JSON.stringify(currentData));
+
+    alert('設定を保存しました。管理画面に戻ります。');
+
+    //元の画面(衣装権限管理画面)へ遷移
+    window.location.href = 'permissions.html';
 });
 
 
