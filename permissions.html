@@ -1,58 +1,38 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live2D 権限管理 | Portfolio</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <nav>
-    <h3>ライバー管理アプリ</h3>
-    <p><a href="index.html">📊 ダッシュボード</a></p>
-    <p><a href="premission.html">👥 衣装権限管理</a></p>
-  </nav>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Live2D 権限管理 | Portfolio</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+      <nav>
+        <h3>ライバー管理アプリ</h3>
+        <p><a href="index.html">📊 ダッシュボード</a></p>
+        <p><a href="premission.html">👥 衣装権限管理</a></p>
+      </nav>
  <main>
         <div class="card">
             <h1>👥 衣装権限管理システム</h1>
             <p>ライバーごとの新衣装・アセットの利用権限を制御します。</p>
             
             <table>
-              <thead>
-                  <tr>
-                      <th>ライバー名</th>
-                      <th>所有衣装</th>
-                      <th>ステータス</th>
-                      <th>操作</th>
-                  </tr>
-              </thead>
-             <tbody>
-                 <tr>
-                     <td>kohaku</td>
-                     <td>通常、冬服、部屋着</td>
-                     <td><span style="color: #27ae60;">● 利用可能</span></td>
-                    <td>
-                         <button type="button">編集</button>
-                         <a href="assets.html" class="btn-live2d">Live2D設定</a>
-                     </td>
-                 </tr>
-                 <tr>
-                     <td>Mao</td>
-                     <td>通常、冬服、部屋着</td>
-                     <td><span style="color: #f39c12;">△ 承認待ち</span></td>
-                      <td>
-                         <a href="assets.html" class="btn-live2d">Live2D設定</a>
-                     </td>
-                 </tr>
-             </tbody>
-                
+                <thead>
+                    <tr>
+                        <th>ライバー名</th>
+                        <th>所有衣装</th>
+                        <th>ステータス</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="liver-table-body"></tbody>
             </table>
             
-            <div style="margin-top: 30px;">
-                <button style="padding: 10px 20px; background: #1a1a2e; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                    + 新規ライバー権限を追加
-                </button>
-            </div>
+            <head>
+                <script src="permissions.js" defer></script>
+            </head>
+        
         </div>
     </main>
   </body>
