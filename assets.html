@@ -1,4 +1,11 @@
 <!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>モデル設定 | Live2D Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
   <main class="assets-container">
     <aside class="model-list">
       <button id="btn-new">新規モデル登録</button>
@@ -12,7 +19,7 @@
       <p class="file-hint">.moc3, .json, .png を選択してください</p>
       </div>
       <form id="asset-form">
-        <input type="text" placeholder="モデル名（例:通常衣装）">
+        <input type="text" placeholder="衣装名を入力してください。（例:通常衣装）" required maxlength="20">
         <button type="submit">設定を保存</button>
       </form>
     </section>
@@ -24,3 +31,7 @@
       </div>
     </section>
   </main>
+
+<script src="assets.js"></script>
+</body>
+</html>
