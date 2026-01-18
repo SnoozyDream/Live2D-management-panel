@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded',function() {
   //保存データがあれば一人目に衣装を追加する
   if (savedModels.length > 0) {
         const newCostumes = savedModels.map(m => m.name).join('、');
-        livers[0].costumes += livers[0].costumes + '、' + newNames;
+        livers[0].costumes = livers[0].costumes + '、' + newCostumes;
   }
 
   //テーブルのhtmlを組み立てる
