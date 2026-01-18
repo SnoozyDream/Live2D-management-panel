@@ -26,16 +26,33 @@ function loadModels() {
 
 // --- CREATE (登録) ---
 assetForm.addEventListener('submit', (e) => {
-    e.preventDefault(); // <form>のリロードを止める
+    e.preventDefault(); // <form>リロード停止
     
     const nameInput = assetForm.querySelector('input[type="text"]');
-    const newModelName = nameInput.value;
+    const newModelName = nameInput.value.trim();    // 空白を除去
 
+    // バリデーションチェック
     if (!newModelName) {
-        alert("モデル名を入力してください");
+        alert("[エラー]衣装名を入力してください");
+        nameInput.focus();    // 入力欄にカーソルを合わせる
+        return;
+    }
+    // バリデーションチェック
+    if (newModelName.length > 20) {
+        alert("[エラー]衣装名は20文字以内で入力してください");
         return;
     }
 
+    //ファイルの選択チェック（ドラッグ&ドロップ用）
+    // 現状は簡易的に、HTMLのファイル入力などを想定したチェック例です
+    // ドロップゾーンにファイルがない場合ここを使います
+    /*
+    if (selectedFiles.length === 0) {
+        alert("【エラー】Live2Dモデルファイル（.moc3, .json等）を選択してください。");
+        return;
+    }
+    */
+    
     // 既存のリストを取得（STORAGE_KEYを使用）
     const currentData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 
@@ -47,13 +64,16 @@ assetForm.addEventListener('submit', (e) => {
     });
 
     // 保存
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(currentData));
-
-    alert('設定を保存しました。管理画面に戻ります。');
-
-    // 元の画面(衣装権限管理画面)へ遷移
-    window.location.href = 'permissions.html';
-});
+    try{
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(currentData));
+        alert('設定を保存しました。管理画面に戻ります。');
+        //衣装権限管理画面へ遷移
+        window.location.href = 'permissions.html';
+    } catch (error) {
+        console.error("保存失敗:",error);
+        alert("ブラウザの保存容量がいっぱいです。不要なデータを削除してください。");
+    }
+    });
 
 // --- DELETE (削除) ---
 window.deleteModel = (event, index) => {
