@@ -5,7 +5,6 @@ const STORAGE_KEY = 'live2d_models';
 
 const assetForm = document.getElementById('asset-form');
 const listItems = document.getElementById('list-items');
-const dropZone = document.getElementById('drop-zone');
 
 // --- READ (一覧表示) ---
 function loadModels() {
@@ -31,28 +30,18 @@ assetForm.addEventListener('submit', (e) => {
     const nameInput = assetForm.querySelector('input[type="text"]');
     const newModelName = nameInput.value.trim();    // 空白を除去
 
-    // バリデーションチェック
+    // 名前が入っていない場合は警告を出して中断
     if (!newModelName) {
         alert("[エラー]衣装名を入力してください");
         nameInput.focus();    // 入力欄にカーソルを合わせる
         return;
     }
-    // バリデーションチェック
+    // 名前の長さが21文字を超過している場合は警告を出して中断
     if (newModelName.length > 20) {
         alert("[エラー]衣装名は20文字以内で入力してください");
         return;
     }
 
-    //ファイルの選択チェック（ドラッグ&ドロップ用）
-    // 現状は簡易的に、HTMLのファイル入力などを想定したチェック例です
-    // ドロップゾーンにファイルがない場合ここを使います
-    /*
-    if (selectedFiles.length === 0) {
-        alert("【エラー】Live2Dモデルファイル（.moc3, .json等）を選択してください。");
-        return;
-    }
-    */
-    
     // 既存のリストを取得（STORAGE_KEYを使用）
     const currentData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 
