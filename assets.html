@@ -6,6 +6,12 @@
     <title>モデル設定 | Live2D Management</title>
     <link rel="stylesheet" href="style.css">
 </head>
+<body> <nav>
+    <h3>ライバー管理アプリ</h3>
+    <p><a href="index.html">📊 ダッシュボード</a></p>
+    <p><a href="permissions.html">👥 衣装権限管理</a></p>
+  </nav>
+        
   <main class="assets-container">
     <aside class="model-list">
       <button id="btn-new">新規モデル登録</button>
@@ -15,7 +21,7 @@
     <section class="upload-section">
       <h2>モデル設定</h2>
       <p class="file-hint">.moc3, .json, .png を選択してください</p>
-      </div>
+        
       <form id="asset-form">
         <input type="text" placeholder="衣装名を入力してください。（例:通常衣装）" required maxlength="20">
         <button type="submit">設定を保存</button>
@@ -24,7 +30,7 @@
       
     <section class="preview-section">
       <canvas id="live2d-canvas"></canvas>
-      <div class="contols">
+      <div class="controls">
         <button onclick="playMotion()">モーション再生</button>
       </div>
     </section>
