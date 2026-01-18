@@ -56,7 +56,7 @@ assetForm.addEventListener('submit', (e) => {
     try{
         localStorage.setItem(STORAGE_KEY, JSON.stringify(currentData));
         alert('設定を保存しました。管理画面に戻ります。');
-        //衣装権限管理画面へ遷移
+        //追加後衣装権限管理画面へ遷移
         window.location.href = 'permissions.html';
     } catch (error) {
         console.error("保存失敗:",error);
@@ -68,6 +68,9 @@ assetForm.addEventListener('submit', (e) => {
 window.deleteModel = (event, index) => {
     event.stopPropagation(); // 親のliクリックイベント（プレビュー等）が動かないようにする
     if (!confirm('本当に削除しますか？')) return;
+    alert('設定を保存しました。管理画面に戻ります。');
+    //削除後衣装権限管理画面へ遷移
+    window.location.href = 'permissions.html';
     
     const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     data.splice(index, 1);
