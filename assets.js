@@ -82,19 +82,38 @@ window.deleteModel = (event, index) => {
 
 loadModels();
 
-// --- Live2D表示テスト ---
-const canvas = document.getElementById('live2d-canvas');
+// Live2Dモデルを表示する関数
+async function initLive2D() {
+ try{
+    const app = new PIXI.Application({
+        view: document.getElementById('live2d-canvas'),
+        autoStart: true,
+        resizeTo: document.querySelector('.preview-section'), // プレビューエリアに合わせる
+        transparent: true // 背景を透明に
+    });
 
-function testCanvas() {
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    // Canvasを水色に塗ってみる（動いているか確認用）
-    ctx.fillStyle = '#e0f7fa';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    ctx.fillStyle = '#000';
-    ctx.font = '20px Arial';
-    ctx.fillText('Live2D Ready!', 50, 100);
+    // モデルを読み込む
+    const model = await PIXI.live2d.Live2DModel.from(MODEL_URL);
+
+    // モデルを画面に追加
+    app.stage.addChild(model);
+
+    // 大きさと位置の調整
+    model.scale.set(0.1); // 10%のサイズに...（ひよりちゃんは元が大きいため）
+    model.x = 0;
+    model.y = 0;
+
+    // ドラッグで動かせるようにする
+    model.on('hit', (hitAreas) => {
+        if (hitAreas.includes('body')) {
+            model.motion('TapBody'); // 体を叩くと動く
+        }
+    });
+
+    } catch (e) {
+        console.error("Live2Dの初期化中にエラーが発生しました:", e);
+    }
 }
 
-testCanvas();
+//実行
+initLive2D();
