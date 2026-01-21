@@ -89,7 +89,9 @@ async function initLive2D() {
         view: document.getElementById('live2d-canvas'),
         autoStart: true,
         resizeTo: document.querySelector('.preview-section'), // プレビューエリアに合わせる
-        transparent: true // 背景を透明に
+        transparent: true, // 背景を透明に
+        forceCanvas: false, 
+        antialias: true
     });
 
     // モデルを読み込む
