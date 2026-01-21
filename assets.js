@@ -1,5 +1,7 @@
 // assets.js
 
+// 練習用モデルの設計図ファイルをURLから引用
+const MODEL_URL = "https://cdn.jsdelivr.net/gh/guansss/pixi-live2d-display/test/assets/hiyori/hiyori_v8.model3.json";
 // キー名を統一
 const STORAGE_KEY = 'live2d_models';
 
@@ -79,3 +81,20 @@ window.deleteModel = (event, index) => {
 };
 
 loadModels();
+
+// --- Live2D表示テスト ---
+const canvas = document.getElementById('live2d-canvas');
+
+function testCanvas() {
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    // Canvasを水色に塗ってみる（動いているか確認用）
+    ctx.fillStyle = '#e0f7fa';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.fillStyle = '#000';
+    ctx.font = '20px Arial';
+    ctx.fillText('Live2D Ready!', 50, 100);
+}
+
+testCanvas();
