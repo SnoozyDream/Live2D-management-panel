@@ -85,7 +85,7 @@ loadModels();
 
 // Live2Dモデルを表示する関数
 async function initLive2D() {
-    try {
+        //キャンパスの用意
         const app = new PIXI.Application({
             view: document.getElementById('live2d-canvas'),
             autoStart: true,
@@ -95,15 +95,19 @@ async function initLive2D() {
             antialias: true,
             resolution: window.devicePixelRatio || 1
         });
-
+        
+    try {
         //Live2Dモデルの読み込み
-        PIXI.live2d.Live2DModel.from(MODEL_URL).then(model => {
-            app.stage.addChild(model);
+        const model = await PIXI.live2d.Live2DModel.from(MODEL_URL);
+        
+        app.stage.addChild(model);
 
             // 表示位置の調整
-            model.x = 0;
-            model.y = 0;
-            model.scale.set(0.1); // 最初は小さめに表示して、映るか確認
+            model.x = window.innerWidth / 2;
+            model.y = window.innerHeight / 2;
+            model.anchor.set(0.5, 0.5);
+
+            model.scale.set(0.2); // 最初は小さめに表示して、映るか確認
         });
 
         // ドラッグで動かせるようにする
@@ -113,8 +117,8 @@ async function initLive2D() {
             }
         });
 
-    } catch (e) {
-        console.error("Live2Dの初期化中にエラーが発生しました:", e);
+    } catch (error) {
+        console.error("モデルの読み込みに失敗しました", error);
     }
 }
 
