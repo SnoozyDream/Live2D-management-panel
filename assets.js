@@ -90,7 +90,8 @@ async function initLive2D() {
             autoStart: true,
             resizeTo: document.querySelector('.preview-section'), // プレビューエリアに合わせる
             transparent: true, // 背景を透明に
-            forceCanvas: false,
+            backgroundAlpha: 0,//WebGLエラー対策
+            resolution: window.devicePixelRatio || 1,
             antialias: true
         });
 
