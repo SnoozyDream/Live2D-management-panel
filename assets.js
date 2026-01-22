@@ -137,11 +137,15 @@ async function initLive2D() {
     }
 }
 
-const assetForm = document.getElementById('asset-form');
-if (assetForm) {
-    assetForm.addEventListener('submit', (e) => {
-        // フォーム処理
-    });
+const currentForm = document.getElementById('asset-form');
+
+if (currentForm) {
+    //フォームが存在する場合のみ、一度だけ登録
+    currentForm.onsubmit = (e) => {
+        e.preventDefault();
+        // ...保存処理など
+        console.log("フォームが送信されました");
+    };
 }
 
 //画面の準備が全て終わってから実行する
