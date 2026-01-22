@@ -90,21 +90,28 @@ loadModels();
 
 // Live2Dモデルを表示する関数
 async function initLive2D() {
+    window.onload = () =>{  
         const canvas = document.getElementById('live2d-canvas');
-        if (!canvas) return; // キャンバスがないページでは何も処理を行わない
-    
+        if (!canvas){
+            console.error("キャンバスが見つかりません！");
+            return; 
+        }
+
         //キャンパスの用意
         const app = new PIXI.Application({
-            view: document.getElementById('live2d-canvas'),
+            view: canvas, // HTMLのCanvasと紐付け
             autoStart: true,
-            resizeTo: document.querySelector('.preview-section'), // プレビューエリアに合わせる
-            transparent: true, // 背景を透明に
-            backgroundAlpha: 0,//WebGLエラー対策
+            resizeTo: document.querySelector('.preview-section'),
+            backgroundColor: 0xeeeeee,
+            backgroundAlpha: 1,
+            transparent: false,
+
             antialias: true
         });
 
-        console.log("モデルの読み込みを開始します...");
-
+        console.log("キャンバスの準備が整いました。モデルを読み込みます...");
+    }
+    
         // PIXI.live2d.Live2DModel が存在するか最終確認
         if (!PIXI.live2d || !PIXI.live2d.Live2DModel) {
             throw new Error("Live2DModel機能がまだロードされていません。");
@@ -117,13 +124,13 @@ async function initLive2D() {
         app.stage.addChild(model);
 
             // 表示位置の調整
-            model.x = window.innerWidth / 2;
-            model.y = window.innerHeight / 2;
-            model.anchor.set(0.5, 0.5);
+            model.x = app.screen.width / 2;
+            model.y = app.screen.height / 2;
+            model.anchor.set(0.5, 0.5); // 中心点をモデルの真ん中に
 
             model.scale.set(0.2); // 最初は小さめに表示して、映るか確認
 
-            console.log("ひよりちゃんの読み込みに成功しました！");
+            console.log("モデルの読み込みに成功しました！");
         
         // インタラクション（反応）の設定
         model.on('hit', (hitAreas) => {
