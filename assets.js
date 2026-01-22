@@ -30,9 +30,10 @@ function loadModels() {
 }
 
 // --- CREATE (登録) ---
-assetForm.addEventListener('submit', (e) => {
-    e.preventDefault(); // <form>リロード停止
-
+if (assetForm){
+    assetForm.addEventListener('submit', (e) => {
+        e.preventDefault(); // <form>リロード停止
+    
     const nameInput = assetForm.querySelector('input[type="text"]');
     const newModelName = nameInput.value.trim();    // 空白を除去
 
@@ -69,6 +70,7 @@ assetForm.addEventListener('submit', (e) => {
         alert("ブラウザの保存容量がいっぱいです。不要なデータを削除してください。");
     }
 });
+}
 
 // --- DELETE (削除) ---
 window.deleteModel = (event, index) => {
