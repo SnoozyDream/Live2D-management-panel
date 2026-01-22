@@ -90,6 +90,9 @@ loadModels();
 
 // Live2Dモデルを表示する関数
 async function initLive2D() {
+        const canvas = document.getElementById('live2d-canvas');
+        if (!canvas) return; // キャンバスがないページでは何も処理を行わない
+    
         //キャンパスの用意
         const app = new PIXI.Application({
             view: document.getElementById('live2d-canvas'),
@@ -97,12 +100,16 @@ async function initLive2D() {
             resizeTo: document.querySelector('.preview-section'), // プレビューエリアに合わせる
             transparent: true, // 背景を透明に
             backgroundAlpha: 0,//WebGLエラー対策
-            antialias: true,
-            resolution: window.devicePixelRatio || 1
+            antialias: true
         });
 
         console.log("モデルの読み込みを開始します...");
-        
+
+        // PIXI.live2d.Live2DModel が存在するか最終確認
+        if (!PIXI.live2d || !PIXI.live2d.Live2DModel) {
+            throw new Error("Live2DModel機能がまだロードされていません。");
+        }
+
     try {
         //Live2Dモデルの読み込み
         const model = await PIXI.live2d.Live2DModel.from(MODEL_URL);
@@ -130,8 +137,14 @@ async function initLive2D() {
     }
 }
 
+const assetForm = document.getElementById('asset-form');
+if (assetForm) {
+    assetForm.addEventListener('submit', (e) => {
+        // フォーム処理
+    });
+}
+
 //画面の準備が全て終わってから実行する
-window.onload = () => {
-    //実行
+window.addEventListener('load',() => {
     initLive2D();
-};
+)};
