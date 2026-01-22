@@ -2,6 +2,9 @@
 
 // 練習用モデルの設計図ファイルをURLから引用
 const MODEL_URL = './models/hiyori/hiyori_free_t08.model3.json';
+//状態の確認
+console.log("PIXIの状態:", typeof PIXI !== 'undefined' ? "OK" : "未読み込み");
+console.log("Live2Dプラグインの状態:", PIXI.live2d ? "OK" : "未読み込み");
 
 // キー名を統一
 const STORAGE_KEY = 'live2d_models';
