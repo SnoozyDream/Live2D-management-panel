@@ -118,5 +118,8 @@ async function initLive2D() {
     }
 }
 
-//実行
+//画面の準備が全て終わってから実行する
+window.onload = () => {
+    //実行
 initLive2D();
+};
