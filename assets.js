@@ -1,7 +1,7 @@
 // assets.js
 
 // 練習用モデルの設計図ファイルをURLから引用
-const MODEL_URL = "https://cdn.jsdelivr.net/gh/guansss/pixi-live2d-display/test/assets/shizuku/shizuku.model.json";
+const MODEL_URL = "https://raw.githubusercontent.com/guansss/pixi-live2d-display/master/test/assets/shizuku/shizuku.model.json";
 // キー名を統一
 const STORAGE_KEY = 'live2d_models';
 
