@@ -95,6 +95,8 @@ async function initLive2D() {
             antialias: true,
             resolution: window.devicePixelRatio || 1
         });
+
+        console.log("モデルの読み込みを開始します...");
         
     try {
         //Live2Dモデルの読み込み
@@ -108,9 +110,10 @@ async function initLive2D() {
             model.anchor.set(0.5, 0.5);
 
             model.scale.set(0.2); // 最初は小さめに表示して、映るか確認
-        });
 
-        // ドラッグで動かせるようにする
+            console.log("ひよりちゃんの読み込みに成功しました！");
+        
+        // インタラクション（反応）の設定
         model.on('hit', (hitAreas) => {
             if (hitAreas.includes('body')) {
                 model.motion('TapBody'); // 体を叩くと動く
