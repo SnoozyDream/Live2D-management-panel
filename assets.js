@@ -151,4 +151,4 @@ if (currentForm) {
 //画面の準備が全て終わってから実行する
 window.addEventListener('load',() => {
     initLive2D();
-)};
+});
