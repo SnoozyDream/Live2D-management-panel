@@ -91,8 +91,8 @@ async function initLive2D() {
             resizeTo: document.querySelector('.preview-section'), // プレビューエリアに合わせる
             transparent: true, // 背景を透明に
             backgroundAlpha: 0,//WebGLエラー対策
-            resolution: window.devicePixelRatio || 1,
-            antialias: true
+            antialias: true,
+            resolution: window.devicePixelRatio || 1
         });
 
         // モデルを読み込む
