@@ -1,4 +1,5 @@
 // assets.js
+let app;
 
 // 練習用モデルの設計図ファイルをURLから引用
 const MODEL_URL = './models/hiyori/hiyori_free_t08.model3.json';
@@ -90,29 +91,26 @@ loadModels();
 
 // Live2Dモデルを表示する関数
 async function initLive2D() {
-    window.onload = () =>{  
         const canvas = document.getElementById('live2d-canvas');
         if (!canvas){
             console.error("キャンバスが見つかりません！");
             return; 
-        }
 
         //キャンパスの用意
-        const app = new PIXI.Application({
+        app = new PIXI.Application({
             view: canvas, // HTMLのCanvasと紐付け
             autoStart: true,
             resizeTo: document.querySelector('.preview-section'),
             backgroundColor: 0xeeeeee,
             backgroundAlpha: 1,
             transparent: false,
-
             antialias: true
         });
 
         console.log("キャンバスの準備が整いました。モデルを読み込みます...");
     }
     
-        // PIXI.live2d.Live2DModel が存在するか最終確認
+        // プラグインの確認
         if (!PIXI.live2d || !PIXI.live2d.Live2DModel) {
             throw new Error("Live2DModel機能がまだロードされていません。");
         }
@@ -128,11 +126,11 @@ async function initLive2D() {
             model.y = app.screen.height / 2;
             model.anchor.set(0.5, 0.5); // 中心点をモデルの真ん中に
 
-            model.scale.set(0.2); // 最初は小さめに表示して、映るか確認
+            model.scale.set(0.2); // 最初は小さめに表示して映るか確認
 
             console.log("モデルの読み込みに成功しました！");
         
-        // インタラクション（反応）の設定
+        // インタラクション設定
         model.on('hit', (hitAreas) => {
             if (hitAreas.includes('body')) {
                 model.motion('TapBody'); // 体を叩くと動く
