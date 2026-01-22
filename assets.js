@@ -12,15 +12,15 @@ const listItems = document.getElementById('list-items');
 function loadModels() {
     const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     if (!listItems) return; // list-itemsがない画面でのエラー防止
-    
-    listItems.innerHTML = ''; 
+
+    listItems.innerHTML = '';
     data.forEach((model, index) => {
         const li = document.createElement('li');
         li.innerHTML = `
             <span>${model.name}</span>
             <button onclick="deleteModel(event, ${index})">削除</button>
         `;
-        li.onclick = () => console.log("選択:", model); 
+        li.onclick = () => console.log("選択:", model);
         listItems.appendChild(li);
     });
 }
@@ -28,7 +28,7 @@ function loadModels() {
 // --- CREATE (登録) ---
 assetForm.addEventListener('submit', (e) => {
     e.preventDefault(); // <form>リロード停止
-    
+
     const nameInput = assetForm.querySelector('input[type="text"]');
     const newModelName = nameInput.value.trim();    // 空白を除去
 
@@ -55,16 +55,16 @@ assetForm.addEventListener('submit', (e) => {
     });
 
     // 保存
-    try{
+    try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(currentData));
         alert('設定を保存しました。管理画面に戻ります。');
         //追加後衣装権限管理画面へ遷移
         window.location.href = 'permissions.html';
     } catch (error) {
-        console.error("保存失敗:",error);
+        console.error("保存失敗:", error);
         alert("ブラウザの保存容量がいっぱいです。不要なデータを削除してください。");
     }
-    });
+});
 
 // --- DELETE (削除) ---
 window.deleteModel = (event, index) => {
@@ -73,7 +73,7 @@ window.deleteModel = (event, index) => {
     alert('設定を保存しました。管理画面に戻ります。');
     //削除後衣装権限管理画面へ遷移
     window.location.href = 'permissions.html';
-    
+
     const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     data.splice(index, 1);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -84,33 +84,33 @@ loadModels();
 
 // Live2Dモデルを表示する関数
 async function initLive2D() {
- try{
-    const app = new PIXI.Application({
-        view: document.getElementById('live2d-canvas'),
-        autoStart: true,
-        resizeTo: document.querySelector('.preview-section'), // プレビューエリアに合わせる
-        transparent: true, // 背景を透明に
-        forceCanvas: false, 
-        antialias: true
-    });
+    try {
+        const app = new PIXI.Application({
+            view: document.getElementById('live2d-canvas'),
+            autoStart: true,
+            resizeTo: document.querySelector('.preview-section'), // プレビューエリアに合わせる
+            transparent: true, // 背景を透明に
+            forceCanvas: false,
+            antialias: true
+        });
 
-    // モデルを読み込む
-    const model = await PIXI.live2d.Live2DModel.from(MODEL_URL);
+        // モデルを読み込む
+        const model = await PIXI.live2d.Live2DModel.from(MODEL_URL);
 
-    // モデルを画面に追加
-    app.stage.addChild(model);
+        // モデルを画面に追加
+        app.stage.addChild(model);
 
-    // 大きさと位置の調整
-    model.scale.set(0.1); // 10%のサイズに...（ひよりちゃんは元が大きいため）
-    model.x = 0;
-    model.y = 0;
+        // 大きさと位置の調整
+        model.scale.set(0.1); // 10%のサイズに...（ひよりちゃんは元が大きいため）
+        model.x = 0;
+        model.y = 0;
 
-    // ドラッグで動かせるようにする
-    model.on('hit', (hitAreas) => {
-        if (hitAreas.includes('body')) {
-            model.motion('TapBody'); // 体を叩くと動く
-        }
-    });
+        // ドラッグで動かせるようにする
+        model.on('hit', (hitAreas) => {
+            if (hitAreas.includes('body')) {
+                model.motion('TapBody'); // 体を叩くと動く
+            }
+        });
 
     } catch (e) {
         console.error("Live2Dの初期化中にエラーが発生しました:", e);
