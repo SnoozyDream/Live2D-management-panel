@@ -1,7 +1,8 @@
 // assets.js
 
 // 練習用モデルの設計図ファイルをURLから引用
-const MODEL_URL = "https://raw.githubusercontent.com/guansss/pixi-live2d-display/master/test/assets/shizuku/shizuku.model.json";
+const MODEL_URL = './models/hiyori/hiyori_free_t08.model3.json';
+
 // キー名を統一
 const STORAGE_KEY = 'live2d_models';
 
@@ -95,16 +96,15 @@ async function initLive2D() {
             resolution: window.devicePixelRatio || 1
         });
 
-        // モデルを読み込む
-        const model = await PIXI.live2d.Live2DModel.from(MODEL_URL);
+        //Live2Dモデルの読み込み
+        PIXI.live2d.Live2DModel.from(MODEL_URL).then(model => {
+            app.stage.addChild(model);
 
-        // モデルを画面に追加
-        app.stage.addChild(model);
-
-        // 大きさと位置の調整
-        model.scale.set(0.1); // 10%のサイズに...（ひよりちゃんは元が大きいため）
-        model.x = 0;
-        model.y = 0;
+            // 表示位置の調整
+            model.x = 0;
+            model.y = 0;
+            model.scale.set(0.1); // 最初は小さめに表示して、映るか確認
+        });
 
         // ドラッグで動かせるようにする
         model.on('hit', (hitAreas) => {
@@ -121,5 +121,5 @@ async function initLive2D() {
 //画面の準備が全て終わってから実行する
 window.onload = () => {
     //実行
-initLive2D();
+    initLive2D();
 };
