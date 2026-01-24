@@ -1,5 +1,5 @@
 // assets.js
-let app;
+//let app; 関数内で定義してるので一旦コメントアウト
 
 // 練習用モデルの設計図ファイルをURLから引用
 const MODEL_URL = './models/hiyori/hiyori_free_t08.model3.json';
@@ -107,7 +107,7 @@ async function initLive2D() {
             antialias: true
         });
 
-        console.log("キャンバスの準備が整いました。モデルを読み込みます...");
+        console.log("PIXI APP 作成完了：", app);
     }
     
         // プラグインの確認
@@ -119,13 +119,12 @@ async function initLive2D() {
         //Live2Dモデルの読み込み
         const model = await PIXI.live2d.Live2DModel.from(MODEL_URL);
         
-        app.stage.addChild(model);
+            app.stage.addChild(model);
 
             // 表示位置の調整
             model.x = app.screen.width / 2;
             model.y = app.screen.height / 2;
             model.anchor.set(0.5, 0.5); // 中心点をモデルの真ん中に
-
             model.scale.set(0.2); // 最初は小さめに表示して映るか確認
 
             console.log("モデルの読み込みに成功しました！");
