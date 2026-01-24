@@ -94,10 +94,11 @@ async function initLive2D() {
         const canvas = document.getElementById('live2d-canvas');
         if (!canvas){
             console.error("キャンバスが見つかりません！");
-            return; 
-
+            return;
+        }
+        
         //キャンパスの用意
-       const app = new PIXI.Application({
+        const app = new PIXI.Application({
             view: canvas, // HTMLのCanvasと紐付け
             autoStart: true,
             resizeTo: document.querySelector('.preview-section'),
@@ -108,7 +109,7 @@ async function initLive2D() {
         });
 
         console.log("PIXI APP 作成完了：", app);
-    }
+    
     
         // プラグインの確認
         if (!PIXI.live2d || !PIXI.live2d.Live2DModel) {
@@ -135,7 +136,6 @@ async function initLive2D() {
                 model.motion('TapBody'); // 体を叩くと動く
             }
         });
-
     } catch (error) {
         console.error("モデルの読み込みに失敗しました", error);
     }
