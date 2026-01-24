@@ -97,7 +97,7 @@ async function initLive2D() {
             return; 
 
         //キャンパスの用意
-        app = new PIXI.Application({
+       const app = new PIXI.Application({
             view: canvas, // HTMLのCanvasと紐付け
             autoStart: true,
             resizeTo: document.querySelector('.preview-section'),
