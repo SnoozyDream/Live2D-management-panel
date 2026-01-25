@@ -50,11 +50,11 @@ if (assetForm) {
 
         if (!newName) return alert("衣装名を入力してください");
 
-        saveModel({
+        const dataToSave ={
             liver: currentLiver,
             name: newName,
             date: new Date().toLocaleDateString()
-        });
+        };
 
         alert('保存しました！');
         location.reload(); // 一覧更新のためにリロード

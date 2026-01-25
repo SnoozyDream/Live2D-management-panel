@@ -16,16 +16,17 @@ function getModelPath(name) {
 }
 
 // --- 関数: 全データを取得する ---
-function getSavedModels() {
+window.getSavedModels = function() {
     const data = localStorage.getItem(STORAGE_KEY);
     return data ? JSON.parse(data) : [];
 }
 
 // --- 関数: 新しい衣装を保存する ---
-function saveModel(newModel) {
+window.saveModel = function(newModel) {
     const data = getSavedModels();
     data.push(newModel);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    console.log("LocalStorageに保存完了:", data); // デバッグ用ログ
 }
 
 // --- 関数: 特定の衣装を削除する ---
