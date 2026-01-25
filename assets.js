@@ -10,8 +10,10 @@ const titleElement = document.querySelector('h1');
 if (titleElement) {
     titleElement.textContent = `${currentLiver} さんの衣装設定`;
 }
+
 // 練習用モデルの設計図ファイルをURLから引用
 const MODEL_URL = './models/hiyori/hiyori_free_t08.model3.json';
+
 //状態の確認
 console.log("PIXIの状態:", typeof PIXI !== 'undefined' ? "OK" : "未読み込み");
 console.log("Live2Dプラグインの状態:", PIXI.live2d ? "OK" : "未読み込み");
@@ -56,9 +58,10 @@ if (assetForm){
 
     // 既存のリストを取得（STORAGE_KEYを使用）
     let currentData = [];
+    alert("既存の衣装リストを取得しました。");
     try {
         const savedData = localStorage.getItem(STORAGE_KEY);
-        //データが存在かつ配列の型をしていれば採用
+        //データが存在かつ配列の型をしていれば処理
         const parsedData = JSON.parse(savedData);
         if (Array.isArray(parsedData)) {
             currentData = parsedData;
