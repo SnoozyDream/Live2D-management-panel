@@ -6,6 +6,9 @@ Live2Dモデルアセットとユーザー権限を管理するためのWebベ�
 所属ライバーのLive2Dモデル（.moc3）やテクスチャ、モーションデータを一括管理し、ブラウザ上でプレビュー・更新を行うためのシステムを想定しています。 
 現在は、**Live2D Cubism SDK for Web** を統合したプレビュー基盤と、マルチページ構成が完成した状態です。
 
+## アップデート内容 (2026/01/25)
+設計の柔軟性と保守性を高めるため、機能を3つの役割に分離（リファクタリング）しました。
+
 ## 実装済み機能
 - **Live2D Cubism SDK 統合 (v5.0対応)**
   - `Cubism Core` および `PixiJS` を利用した .moc3 モデルのレンダリング基盤を構築。
@@ -17,12 +20,34 @@ Live2Dモデルアセットとユーザー権限を管理するためのWebベ�
 - **衣装権限管理プロトタイプ**: ライバーごとの所有衣装や承認ステータスを一覧表示するテーブルレイアウト。
 - **レスポンシブ設計**: PCおよびモバイルブラウザからの閲覧に最適化。
 
-## 使用技術
-- **Frontend**: HTML5, CSS3, JavaScript (Vanilla JS)
-- **Engine**: PixiJS v5, Live2D Cubism SDK for Web (Core v5.0)
-- **Deployment**: GitHub Pages
+### アーキテクチャ構成
+機能ごとにJSファイルを分割し、役割を明確化しています。
+- **storage.js (Data Layer)**: 
+    - LocalStorageを使用したデータのCRUD操作（生成・取得・更新・削除）を担当。
+    - ライバーとモデルパスの対応表（名簿）を一括管理。
+- **live2d-viewer.js (Presentation Layer)**: 
+    - PIXI.jsおよびLive2D Cubism SDKを用いた描画専門のエンジン。
+    - 外部からの引数（Canvas ID, Model URL）に応じて動的に描画。
+- **assets.js (Controller Layer)**: 
+    - ユーザー操作（フォーム送信、衣装選択）を各モジュールへ仲介する司令塔。
 
+
+### 追加機能
+- **衣装選択（着替え）機能**: 一覧から衣装名をクリックすることで、選択状態を保持しLive2D表示へ反映。
+- **ライバー別フィルタリング**: URLパラメータから取得したライバー名に基づき、表示データとモデルを自動切り替え。
 ## 今後の実装予定
 - [ ] **Firebase 連携によるアセット管理の動態化**
   - Live2Dモデルの設定情報や衣装権限データをクラウド上で一元管理し、ブラウザからリアルタイムで追加・編集・保存ができるCRUD（クラッド）機能の実装。
 ---
+
+## 📂 ディレクトリ構造
+```text
+project/
+├── index.html           # ログイン/ポータル
+├── permissions.html     # ライバー一覧（管理画面）
+├── assets.html          # 衣装設定画面
+├── js/                  # JavaScript資産
+│   ├── storage.js
+│   ├── live2d-viewer.js
+│   └── assets.js
+└── models/              # Live2Dモデルデータ
