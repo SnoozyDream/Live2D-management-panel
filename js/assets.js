@@ -56,6 +56,8 @@ if (assetForm) {
             date: new Date().toLocaleDateString()
         };
 
+        window.saveModel(dataToSave);
+
         alert('保存しました！');
         location.reload(); // 一覧更新のためにリロード
     });
