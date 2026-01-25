@@ -1,7 +1,9 @@
 // assets.js
 
+// --- 設定と外部との連携 ---
 const urlParams = new URLSearchParams(window.location.search);
 const currentLiver = urlParams.get('liver') || 'ゲスト';
+const STORAGE_KEY = 'live2d_models';
 
 console.log("現在のターゲット：",currentLiver);
 
@@ -17,9 +19,6 @@ const MODEL_URL = './models/hiyori/hiyori_free_t08.model3.json';
 //状態の確認
 console.log("PIXIの状態:", typeof PIXI !== 'undefined' ? "OK" : "未読み込み");
 console.log("Live2Dプラグインの状態:", PIXI.live2d ? "OK" : "未読み込み");
-
-// キー名を統一
-const STORAGE_KEY = 'live2d_models';
 
 const assetForm = document.getElementById('asset-form');
 const listItems = document.getElementById('list-items');
@@ -114,57 +113,17 @@ window.deleteModel = (event, index) => {
 
 loadModels();
 
-// Live2Dモデルを表示する関数
-async function initLive2D() {
-        const canvas = document.getElementById('live2d-canvas');
-        if (!canvas){
-            console.error("キャンバスが見つかりません！");
-            return;
-        }
-        
-        //キャンパスの用意
-        const app = new PIXI.Application({
-            view: canvas, // HTMLのCanvasと紐付け
-            autoStart: true,
-            resizeTo: document.querySelector('.preview-section'),
-            backgroundColor: 0xeeeeee,
-            backgroundAlpha: 1,
-            transparent: false,
-            antialias: true
-        });
+// モデルのパスを決める処理
+let modelPath = './models/hiyori/hiyori_free_t08.model3.json'; // デフォルト
 
-        console.log("PIXI APP 作成完了：", app);
-    
-    
-        // プラグインの確認
-        if (!PIXI.live2d || !PIXI.live2d.Live2DModel) {
-            throw new Error("Live2DModel機能がまだロードされていません。");
-        }
-
-    try {
-        //Live2Dモデルの読み込み
-        const model = await PIXI.live2d.Live2DModel.from(MODEL_URL);
-        
-            app.stage.addChild(model);
-
-            // 表示位置の調整
-            model.x = app.screen.width / 2;
-            model.y = app.screen.height / 2;
-            model.anchor.set(0.5, 0.5); // 中心点をモデルの真ん中に
-            model.scale.set(0.2); // 最初は小さめに表示して映るか確認
-
-            console.log("モデルの読み込みに成功しました！");
-        
-        // インタラクション設定
-        model.on('hit', (hitAreas) => {
-            if (hitAreas.includes('body')) {
-                model.motion('TapBody'); // 体を叩くと動く
-            }
-        });
-    } catch (error) {
-        console.error("モデルの読み込みに失敗しました", error);
-    }
+if (currentLiver === 'Mao') {
+    modelPath = './models/mao/model.json'; // Maoさんのパス
+} else if (currentLiver === 'kohaku') {
+    modelPath = './models/hiyori/hiyori_free_t08.model3.json';
 }
+
+// 引っ越した関数を呼び出す
+initLive2D('live2d-canvas', modelPath);
 
 //画面の準備が全て終わってから実行する
 window.addEventListener('load',() => {
