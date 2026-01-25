@@ -1,5 +1,4 @@
 // assets.js
-//let app; 関数内で定義してるので一旦コメントアウト
 
 // 練習用モデルの設計図ファイルをURLから引用
 const MODEL_URL = './models/hiyori/hiyori_free_t08.model3.json';
@@ -139,17 +138,6 @@ async function initLive2D() {
     } catch (error) {
         console.error("モデルの読み込みに失敗しました", error);
     }
-}
-
-const currentForm = document.getElementById('asset-form');
-
-if (currentForm) {
-    //フォームが存在する場合のみ、一度だけ登録
-    currentForm.onsubmit = (e) => {
-        e.preventDefault();
-        // ...保存処理など
-        console.log("フォームが送信されました");
-    };
 }
 
 //画面の準備が全て終わってから実行する
