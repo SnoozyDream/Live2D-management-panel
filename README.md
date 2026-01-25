@@ -19,7 +19,7 @@ Live2Dモデルアセットとユーザー権限を管理するためのWebベ�
 
 ## 使用技術
 - **Frontend**: HTML5, CSS3, JavaScript (Vanilla JS)
-- - **Engine**: PixiJS v5, Live2D Cubism SDK for Web (Core v5.0)
+- **Engine**: PixiJS v5, Live2D Cubism SDK for Web (Core v5.0)
 - **Deployment**: GitHub Pages
 
 ## 今後の実装予定
