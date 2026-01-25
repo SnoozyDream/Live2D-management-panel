@@ -1,7 +1,9 @@
 //permissions.js
 
+const STORAGE_KEY = 'live2d_models';
+const tableBody = document.getElementById('liver-table-body');
+
 document.addEventListener('DOMContentLoaded', function () {
-  const tableBody = document.getElementById('liver-table-body');
 
   //tablebodyが見つからない場合は処理を中断
   if (!tableBody) return;
@@ -12,8 +14,8 @@ document.addEventListener('DOMContentLoaded', function () {
     { name: 'Mao', costumes: '通常、冬服、部屋着', status: '△ 承認待ち', color: '#f39c12' }
   ];
 
-  //assets.jsで保存したデータを取得(live2d_models)
-  const savedModels = JSON.parse(localStorage.getItem('live2d_models') || '[]');
+  //STORAGE_KRYを使ってデータを取得
+  const savedModels = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 
   //保存データがあれば一人目に衣装を追加する
   if (savedModels.length > 0) {
@@ -31,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <td><span style="color: ${liver.color};">${liver.status}</span></td>
             <td>
                 <button type="button">編集</button>
-                <a href="assets.html" class="btn-live2d">Live2D設定</a>
+                <a href="assets.html?liver=${liver.name}" class="btn-live2d">Live2D設定</a>
             </td>
         </tr>
         `;

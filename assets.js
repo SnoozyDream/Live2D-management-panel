@@ -1,5 +1,15 @@
 // assets.js
 
+const urlParams = new URLSearchParams(window.location.search);
+const currentLiver = urlParams.get('liver') || 'ゲスト';
+
+console.log("現在のターゲット：",currentLiver);
+
+//ページのタイトルを選択したライバー毎に反映させるように表示
+const titleElement = document.querySelector('h1');
+if (titleElement) {
+    titleElement.textContent = `${currentLiver} さんの衣装設定`;
+}
 // 練習用モデルの設計図ファイルをURLから引用
 const MODEL_URL = './models/hiyori/hiyori_free_t08.model3.json';
 //状態の確認
@@ -33,27 +43,36 @@ function loadModels() {
 if (assetForm){
     assetForm.addEventListener('submit', (e) => {
         e.preventDefault(); // <form>リロード停止
-    
+    alert('"submit(e) => e.preeventDefault()" :リロード停止処理がされました。');
+
     const nameInput = assetForm.querySelector('input[type="text"]');
     const newModelName = nameInput.value.trim();    // 空白を除去
 
     // 名前が入っていない場合は警告を出して中断
     if (!newModelName) {
         alert("[エラー]衣装名を入力してください");
-        nameInput.focus();    // 入力欄にカーソルを合わせる
-        return;
-    }
-    // 名前の長さが21文字を超過している場合は警告を出して中断
-    if (newModelName.length > 20) {
-        alert("[エラー]衣装名は20文字以内で入力してください");
         return;
     }
 
     // 既存のリストを取得（STORAGE_KEYを使用）
-    const currentData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    let currentData = [];
+    try {
+        const savedData = localStorage.getItem(STORAGE_KEY);
+        //データが存在かつ配列の型をしていれば採用
+        const parsedData = JSON.parse(savedData);
+        if (Array.isArray(parsedData)) {
+            currentData = parsedData;
+        }
+    } catch (error) {
+        console.warn("既存データの解析に失敗した為、リセットしました");
+        currentData = [];
+    }
 
     // 新しい衣装データを追加
+    console.log("push直前のデータ状態:", currentData);
+
     currentData.push({
+        liver:currentLiver, //追加するライバーを特定
         name: newModelName,
         status: '有効',
         date: new Date().toLocaleDateString()
@@ -74,16 +93,20 @@ if (assetForm){
 
 // --- DELETE (削除) ---
 window.deleteModel = (event, index) => {
-    event.stopPropagation(); // 親のliクリックイベント（プレビュー等）が動かないようにする
-    if (!confirm('本当に削除しますか？')) return;
-    alert('設定を保存しました。管理画面に戻ります。');
-    //削除後衣装権限管理画面へ遷移
-    window.location.href = 'permissions.html';
+    event.stopPropagation(); // 背景のクリックイベントを防ぐ
 
+    //ユーザーに最終確認を取る
+    if (!confirm('本当に削除しますか？\n削除後は元に戻せません。')) return;
+
+    //データを削除
     const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     data.splice(index, 1);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    loadModels();
+
+    alert('削除が完了しました。管理画面の一覧を更新します。');
+
+    //削除後衣装権限管理画面へ遷移
+    window.location.href = 'permissions.html';
 };
 
 loadModels();
