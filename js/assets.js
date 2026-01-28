@@ -49,7 +49,7 @@ if (assetForm) {
     assetForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const nameValue = document.getElementById('outdit-name').value;
+        const nameValue = document.getElementById('outfit-name').value;
         const urlValue = document.getElementById('model-url').value;
 
         if (!nameValue) return alert("衣装名を入力してください");
