@@ -12,9 +12,6 @@
   <script src="https://cdn.jsdelivr.net/npm/pixi.js@5.3.12/dist/pixi.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display/dist/index.min.js"></script>
 
-  <script src="js/storage.js"></script>
-  <script src="js/live2d-viewer.js"></script>
-  <script src="js/assets.js"></script>
 </head>
 
 <body>
@@ -23,23 +20,23 @@
     <p><a href="index.html">📊 ダッシュボード</a></p>
     <p><a href="permissions.html">👥 衣装権限管理</a></p>
   </nav>
-
+  
   <main class="assets-container">
     <aside class="model-list">
       <button id="btn-new">新規モデル登録</button>
       <ul id="list-items"></ul>
     </aside>
-
+    
     <section class="upload-section">
       <h2>モデル設定</h2>
       <p class="file-hint">.moc3, .json, .png を選択してください</p>
-
+      
       <form id="asset-form">
         <input type="text" placeholder="衣装名を入力してください。最大20文字まで入力できます。（例:通常衣装）" required maxlength="20">
         <button type="submit">設定を保存</button>
       </form>
     </section>
-
+    
     <section class="preview-section">
       <canvas id="live2d-canvas"></canvas>
       <div class="controls">
@@ -47,7 +44,10 @@
       </div>
     </section>
   </main>
-
+  
 </body>
 
+<script src="js/storage.js"></script>
+<script src="js/live2d-viewer.js"></script>
+<script src="js/assets.js"></script>
 </html>
