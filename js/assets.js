@@ -85,7 +85,7 @@ window.deleteAction = async (index) => {
     if (!confirm('削除しますか？')) return;
 
     const allData = await getSavedModels();
-    const myData = getSavedModels().filter(item => item.liver === currentLiver);
+    const myData = allData.filter(item => item.liver === currentLiver);
 
     await deleteModelData(myData[index]);
 
