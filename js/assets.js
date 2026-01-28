@@ -59,7 +59,7 @@ if (assetForm) {
             date: new Date().toLocaleDateString()
         };
 
-        await twindow.saveModel(dataToSave);
+        await window.saveModel(dataToSave);
 
         alert('保存しました！');
         location.reload(); // 一覧更新のためにリロード
