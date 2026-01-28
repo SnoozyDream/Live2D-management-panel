@@ -31,10 +31,9 @@
       <h2>モデル設定</h2>
       <p class="file-hint">.moc3, .json, .png を選択してください</p>
       
-      <form id="asset-form">
-        <input type="url" id="model-url" placeholder="モデルのURL(.json)を入力" required>
-
-        <input type="text" placeholder="衣装名を入力してください。最大20文字まで入力できます。（例:通常衣装）" required maxlength="20">
+      <form id="asset-form" novalidate>
+        <input type="text" id="outfit-name" placeholder="衣装名(例：冬服)" required>
+        <input type="text" id="model-url" placeholder="モデルデータのURLまたはパスを入力" required>
         
         <button type="submit">設定を保存</button>
       </form>
