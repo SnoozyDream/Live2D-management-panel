@@ -25,14 +25,17 @@ function refreshDisplay() {
 }
 
 // --- READ: 一覧表示 ---
-function loadModels() {
+async function loadModels() {
     const listItems = document.getElementById('list-items');
     if (!listItems) return;
 
-    const myData = getSavedModels().filter(item => item.liver === currentLiver);
+    // 現在のリストをクリアしてから再構築
+    const myData = await getSavedModels();
+    const filteredData = myData.filter(item => item.liver === currentLiver);
+    
     const currentActive = getSelectedModel();
 
-    listItems.innerHTML = myData.map((model, index) => `
+    listItems.innerHTML = filteredData.map((model, index) => `
         <li onclick="changeClothes('${model.name}')" style="cursor:pointer; ${model.name === currentActive ? 'background:#d1e7ff;' : ''}">
             <span>${model.name}</span>
             <button onclick="event.stopPropagation(); deleteAction(${index})">削除</button>
@@ -43,7 +46,7 @@ function loadModels() {
 // --- CREATE: 登録 ---
 const assetForm = document.getElementById('asset-form');
 if (assetForm) {
-    assetForm.addEventListener('submit', (e) => {
+    assetForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const nameInput = assetForm.querySelector('input[type="text"]');
         const newName = nameInput.value.trim();
@@ -56,7 +59,7 @@ if (assetForm) {
             date: new Date().toLocaleDateString()
         };
 
-        window.saveModel(dataToSave);
+        await twindow.saveModel(dataToSave);
 
         alert('保存しました！');
         location.reload(); // 一覧更新のためにリロード
@@ -73,12 +76,15 @@ window.changeClothes = (modelName) => {
 };
 
 // --- DELETE: 削除 ---
-window.deleteAction = (index) => {
+window.deleteAction = async (index) => {
     if (!confirm('削除しますか？')) return;
 
+    const allData = await getSavedModels();
     const myData = getSavedModels().filter(item => item.liver === currentLiver);
     deleteModelData(myData[index]);
-    
+
+    await deleteModelData(myData[index]);
+
     alert('削除しました');
     location.reload();
 };

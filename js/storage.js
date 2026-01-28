@@ -11,27 +11,32 @@ const LIVER_MODELS = {
 };
 
 // --- 関数: ライバー名からモデルのパスを返す ---
-function getModelPath(name) {
+window.getModelPath = function(name) {
     return LIVER_MODELS[name] || LIVER_MODELS['ゲスト'];
 }
 
 // --- 関数: 全データを取得する ---
-window.getSavedModels = function() {
-    const data = localStorage.getItem(STORAGE_KEY);
-    return data ? JSON.parse(data) : [];
+window.getSavedModels = async function() {
+    // 実際にはここで fetch('/api/models') などをする
+    return new Promise((resolve) => {
+        setTimeout(() => { // 擬似的な非同期処理
+            const data = localStorage.getItem(STORAGE_KEY);
+            resolve(data ? JSON.parse(data) : []);
+        }, 100); // 100msの遅延
+    });
 }
 
 // --- 関数: 新しい衣装を保存する ---
-window.saveModel = function(newModel) {
-    const data = getSavedModels();
+window.saveModel = async function(newModel) {
+    const data = await getSavedModels(); // 非同期で取得
     data.push(newModel);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    console.log("LocalStorageに保存完了:", data); // デバッグ用ログ
+    console.log("DB(Local)に保存完了:", data);
 }
 
 // --- 関数: 特定の衣装を削除する ---
-function deleteModelData(targetItem) {
-    const allData = getSavedModels();
+window.deleteModelData = async function(targetItem) {
+    const allData = await getSavedModels();
     // ターゲット（ライバー名と衣装名の組み合わせ）が一致しないものだけ残す
     const newData = allData.filter(item => 
         !(item.liver === targetItem.liver && item.name === targetItem.name)
