@@ -28,11 +28,11 @@ window.getSavedModels = async function() {
 
 // --- 関数: 新しい衣装を保存する ---
 window.saveModel = async function(newModel) {
-    const data = await getSavedModels(); // 非同期で取得
+    const data = await window.getSavedModels(); // 非同期で取得
     data.push(newModel);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     console.log("DB(Local)に保存完了:", data);
-}
+};
 
 // --- 関数: 特定の衣装を削除する ---
 window.deleteModelData = async function(targetItem) {

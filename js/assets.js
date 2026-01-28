@@ -62,7 +62,9 @@ if (assetForm) {
         await window.saveModel(dataToSave);
 
         alert('保存しました！');
-        location.reload(); // 一覧更新のためにリロード
+
+        // 登録後、同じライバーのページにリダイレクト
+        window.location.href = `assets.html?liver=${encodeURIComponent(currentLiver)}`;
     });
 }
 
