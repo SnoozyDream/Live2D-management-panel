@@ -44,11 +44,12 @@ window.deleteModelData = async function(targetItem) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
 }
 
-// 今どの衣装を選択しているかを保存
+// --- (setter) 今どの衣装を選択しているかを保存 ---
 function setSelectedModel(modelName) {
     localStorage.setItem(SELECTED_KEY, modelName);
 }
 
+// --- (getter) 選択されている衣装名を取得 ---
 function getSelectedModel() {
     return localStorage.getItem(SELECTED_KEY) || "デフォルト";
 }
