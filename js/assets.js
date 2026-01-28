@@ -48,10 +48,18 @@ const assetForm = document.getElementById('asset-form');
 if (assetForm) {
     assetForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+
         const nameInput = assetForm.querySelector('input[type="text"]');
         const newName = nameInput.value.trim();
 
         if (!newName) return alert("衣装名を入力してください");
+
+        // ライバー名が正しく取れているか？
+        console.log("現在のライバー:", currentLiver);
+        if (!currentLiver || currentLiver === 'ゲスト') {
+            const confirmGuest = confirm("ライバー名が『ゲスト』ですが、このまま保存しますか？");
+            if (!confirmGuest) return;
+        }
 
         const dataToSave ={
             liver: currentLiver,
@@ -59,12 +67,21 @@ if (assetForm) {
             date: new Date().toLocaleDateString()
         };
 
-        await window.saveModel(dataToSave);
+        try {
+            console.log("保存を開始します", dataToSave);
+            await window.saveModel(dataToSave);
+            console.log("保存が完了しました");
+            
+            alert(`${currentLiver}さんの『${newName}』を保存しました！`);
 
-        alert('保存しました！');
-
-        // 登録後、同じライバーのページにリダイレクト
-        window.location.href = `assets.html?liver=${encodeURIComponent(currentLiver)}`;
+            // URLを強制的に指定して遷移
+            const nextUrl = `assets.html?liver=${encodeURIComponent(currentLiver)}`;
+            console.log("次のページへ移動します:", nextUrl);
+            window.location.href = nextUrl;
+        } catch (error) {
+            console.error("保存中にエラーが発生しました:", error);
+            alert("保存に失敗しました。もう一度お試しください。" + error.message);
+        }
     });
 }
 
