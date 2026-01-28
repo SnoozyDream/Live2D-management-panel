@@ -86,7 +86,6 @@ window.deleteAction = async (index) => {
 
     const allData = await getSavedModels();
     const myData = getSavedModels().filter(item => item.liver === currentLiver);
-    deleteModelData(myData[index]);
 
     await deleteModelData(myData[index]);
 
