@@ -33,7 +33,7 @@ async function initLive2D(canvasId, modelUrl) {
         model.x = app.screen.width / 2;
         model.y = app.screen.height / 2;
 
-        app.stage.addChild(model); // ← これも忘れずに！
+        app.stage.addChild(model);
 
         // インタラクション
         model.on('hit', (hitAreas) => {
