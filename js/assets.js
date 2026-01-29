@@ -109,7 +109,7 @@ window.deleteAction = async (id) => {
     //IDが一致する「消したいデータ」を特定
     const target = allData.find(item => item.id === id);
 
-    if (!target) {
+    if (target) {
         // storage.js などの削除関数を呼ぶ
         await window.deleteModelData(target);
         alert('削除が完了しました');
@@ -117,5 +117,4 @@ window.deleteAction = async (id) => {
     }else{
         alert('エラー：削除対象が見つかりません');
     }
-    await deleteModelData(target);
 };
