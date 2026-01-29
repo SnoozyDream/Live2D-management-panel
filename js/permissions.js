@@ -17,11 +17,17 @@ document.addEventListener('DOMContentLoaded', function () {
   //STORAGE_KRYを使ってデータを取得
   const savedModels = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 
-  //保存データがあれば一人目に衣装を追加する
-  if (savedModels.length > 0) {
-    const newCostumes = savedModels.map(m => m.name).join('、');
-    livers[0].costumes = livers[0].costumes + '、' + newCostumes;
-  }
+  //保存データがあれば、それぞれに該当するライバーに衣装を追加する
+  savedModels.forEach(model => {
+    // model.liver（データの持ち主）と一致する人を livers 配列から探す
+    const targetLiver = livers.find(l => l.name === model.liver);
+    
+    // 見つかった場合、その人の衣装にモデル名を追加
+    if (targetLiver) {
+      // 既存の衣装にカンマ区切りで追加
+      targetLiver.costumes += `、` + model.name;
+    }
+  });
 
   //テーブルのhtmlを組み立てる
   let htmlContent = '';
