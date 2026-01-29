@@ -24,7 +24,7 @@ async function initLive2D(canvasId, modelUrl) {
 
         const modelWidth = model.width;
         const modelHeight = model.height;
-        const ratio = (canvasWidth * 0.8) / modelWidth;
+        const ratio = (canvasWidth * 0.7) / modelWidth;
 
         model.scale.set(ratio);
 
