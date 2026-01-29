@@ -35,10 +35,10 @@ async function loadModels() {
     
     const currentActive = getSelectedModel();
 
-    listItems.innerHTML = filteredData.map((model, index) => `
-        <li onclick="changeClothes('${model.name}')" style="cursor:pointer; ${model.name === currentActive ? 'background:#d1e7ff;' : ''}">
-            <span>${model.name}</span>
-            <button onclick="event.stopPropagation(); deleteAction(${index})">削除</button>
+    listItems.innerHTML = filteredData.map((model) => `
+        <li onclick="changeClothes('${model.id}')" style="cursor:pointer; ${model.id === currentActive ? 'background:#d1e7ff;' : ''}">
+            <span>${model.id}</span>
+            <button onclick="event.stopPropagation(); deleteAction('${model.id}')">削除</button>
         </li>
     `).join('');
 }
@@ -52,12 +52,24 @@ if (assetForm) {
         const nameValue = document.getElementById('outfit-name').value;
         const urlValue = document.getElementById('model-url').value;
 
-        if (!nameValue) return alert("衣装名を入力してください");
-        if (!urlValue) return alert("モデルURLを入力してください");
+        if (!nameValue || !urlValue) return alert("登録に必要な項目の入力が足りません。入力してください");
 
         console.log("今保存しようとしているライバー名:", currentLiver);
-        
+
+        // 現在の全データを取得する();
+        const allData = await getSavedModels();
+
+        // 重複しないIDが決まるまでループする
+        let newId = crypto.randomUUID();
+
+        // 「もし newId が既存データのどれかの id と一致してしまったら」ループを回す
+        while (allData.some(item => item.id === newId)) {
+            console.warn("奇跡的な確率でIDが重複しました。再生成します...");
+            newId = crypto.randomUUID(); // 再生成して、再度while条件をチェック
+        }
+
         const dataToSave ={
+            id: newId, //　一意の衣装IDとしてUUIDを使用
             liver: currentLiver, //どのライバーのデータか
             name: nameValue, //衣装名
             modelURL: urlValue, //モデルデータ
@@ -82,12 +94,23 @@ window.changeClothes = (modelName) => {
 };
 
 // --- DELETE: 削除 ---
-window.deleteAction = async (index) => {
-    if (!confirm('削除しますか？')) return;
+window.deleteAction = async (id) => {
+    if (!confirm('ほんとにこの衣装を削除しますか？')) return;
 
+    //全データを取得
     const allData = await getSavedModels();
-    const myData = allData.filter(item => item.liver === currentLiver);
 
+    //IDが一致する「消したいデータ」を特定
+    const target = allData.find(item => item.id === id);
+
+    if (!target) {
+        // storage.js などの削除関数を呼ぶ
+        await window.deleteModelData(target);
+        alert('削除が完了しました');
+        location.reload();
+    }else{
+        alert('エラー：削除対象が見つかりません');
+    }
     await deleteModelData(myData[index]);
 
     alert('削除しました');
