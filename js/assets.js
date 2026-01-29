@@ -55,7 +55,8 @@ if (assetForm) {
         if (!nameValue) return alert("衣装名を入力してください");
         if (!urlValue) return alert("モデルURLを入力してください");
 
-
+        console.log("今保存しようとしているライバー名:", currentLiver);
+        
         const dataToSave ={
             liver: currentLiver, //どのライバーのデータか
             name: nameValue, //衣装名
@@ -67,7 +68,7 @@ if (assetForm) {
             alert(`衣装セットを登録しました！`);
 
             // URLを強制的に指定して遷移
-            window.location.href = `permissions.html?liver=${encodeURIComponent(currentLiver)}`;
+            window.location.href = `assets.html?liver=${encodeURIComponent(currentLiver)}`;
     });
 }
 
