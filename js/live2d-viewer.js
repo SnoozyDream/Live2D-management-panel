@@ -18,12 +18,22 @@ async function initLive2D(canvasId, modelUrl) {
     try {
         // 引数でもらった modelUrl を読み込む
         const model = await PIXI.live2d.Live2DModel.from(modelUrl);
-        
-        app.stage.addChild(model);
+
+        const canvasWidth = app.view.width;
+        const canvasHeight = app.view.height;
+
+        const modelWidth = model.width;
+        const modelHeight = model.height;
+        const ratio = (canvasWidth * 0.8) / modelWidth;
+
+        model.scale.set(ratio);
+
+        model.anchor.set(0.5, 0.5);
+
         model.x = app.screen.width / 2;
         model.y = app.screen.height / 2;
-        model.anchor.set(0.5, 0.5);
-        model.scale.set(0.4);
+
+        app.stage.addChild(model); // ← これも忘れずに！
 
         // インタラクション
         model.on('hit', (hitAreas) => {
