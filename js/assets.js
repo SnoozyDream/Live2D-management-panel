@@ -117,5 +117,5 @@ window.deleteAction = async (id) => {
     }else{
         alert('エラー：削除対象が見つかりません');
     }
-    await deleteModelData(myData[index]);
+    await deleteModelData(target);
 };
