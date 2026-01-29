@@ -85,7 +85,7 @@ if (assetForm) {
 }
 
 // --- UPDATE (表示切り替え): 衣装選択 ---
-window.changeClothes = (id) => {
+window.changeClothes = async (id) => {
 
     //全データを取得
     const allData = await getSavedModels();
