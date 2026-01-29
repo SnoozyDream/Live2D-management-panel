@@ -85,10 +85,11 @@ if (assetForm) {
 }
 
 // --- UPDATE (表示切り替え): 衣装選択 ---
-window.changeClothes = (modelName) => {
-    setSelectedModel(modelName);
-    alert(`${modelName} に着替えました！`);
+window.changeClothes = (id) => {
+    setSelectedModel(id);
+    alert(`衣装を着替えました！`);
     loadModels(); // リストのハイライト更新
+
     // 本来はここでLive2Dのテクスチャ等を差し替えるが、今はログと再描画で表現
     refreshDisplay();
 };
@@ -99,7 +100,6 @@ window.deleteAction = async (id) => {
 
     //全データを取得
     const allData = await getSavedModels();
-
     //IDが一致する「消したいデータ」を特定
     const target = allData.find(item => item.id === id);
 
@@ -112,7 +112,4 @@ window.deleteAction = async (id) => {
         alert('エラー：削除対象が見つかりません');
     }
     await deleteModelData(myData[index]);
-
-    alert('削除しました');
-    location.reload();
 };
