@@ -22,8 +22,8 @@ async function initLive2D(canvasId, modelUrl) {
         app.stage.addChild(model);
         model.x = app.screen.width / 4;
         model.y = app.screen.height / 4;
-        model.anchor.set(0.5, 0.5);
-        model.scale.set(0.2);
+        model.anchor.set(0.25, 0.25);
+        model.scale.set(0.1);
 
         // インタラクション
         model.on('hit', (hitAreas) => {

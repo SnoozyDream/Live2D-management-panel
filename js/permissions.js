@@ -10,8 +10,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   //デフォルトのライバーデータ
   let livers = [
-    { name: 'kohaku', costumes: '通常、冬服、部屋着', status: '● 利用可能', color: '#27ae60' },
-    { name: 'Mao', costumes: '通常、冬服、部屋着', status: '△ 承認待ち', color: '#f39c12' }
+    { name: 'hiyori', costumes: '通常、冬服、部屋着', status: '● 利用可能', color: '#27ae60' },
+    { name: 'miku', costumes: '通常、冬服、部屋着', status: '△ 承認待ち', color: '#f39c12' }
   ];
 
   //STORAGE_KRYを使ってデータを取得
