@@ -6,7 +6,7 @@ const SELECTED_KEY = 'selected_liver_model';
 // ライバーとモデルの対応表
 const LIVER_MODELS = {
     'kohaku': './models/hiyori/hiyori_free_t08.model3.json',
-    'Mao': './models/mao_model/model.json', 
+    'Mao': './models/miku/miku.model3.json', 
     'ゲスト': './models/hiyori/hiyori_free_t08.model3.json'
 };
 
