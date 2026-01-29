@@ -38,9 +38,8 @@ window.saveModel = async function(newModel) {
 window.deleteModelData = async function(targetItem) {
     const allData = await getSavedModels();
     // ターゲット（ライバー名と衣装名の組み合わせ）が一致しないものだけ残す
-    const newData = allData.filter(item => 
-        !(item.liver === targetItem.liver && item.name === targetItem.name)
-    );
+    const newData = allData.filter(item => item.id === targetItem.id);
+    
     localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
 }
 
