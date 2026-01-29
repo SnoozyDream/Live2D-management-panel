@@ -37,7 +37,7 @@ async function loadModels() {
 
     listItems.innerHTML = filteredData.map((model) => `
         <li onclick="changeClothes('${model.id}')" style="cursor:pointer; ${model.id === currentActive ? 'background:#d1e7ff;' : ''}">
-            <span>${model.id}</span>
+            <span>${model.name}</span>
             <button onclick="event.stopPropagation(); deleteAction('${model.id}')">削除</button>
         </li>
     `).join('');
