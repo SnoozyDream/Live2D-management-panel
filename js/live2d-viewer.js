@@ -41,11 +41,27 @@ async function initLive2D(canvasId, modelUrl) {
         
         // モデルの配置とサイズを調整する関数
         const adjustModel = () => {
-            // キャンバスの80%に収める計算
-            const ratioW = (app.screen.width * 0.8) / model.internalModel.sourceCapsule.width;  // 横幅比率を正確に取得
-            const ratioH = (app.screen.height * 0.8) / model.internalModel.sourceCapsule.height;    // 縦幅比率を正確に取得
+            // モデルがまだ準備できていなければ何もしない
+            if (!model) return;
+
+            //sourceCapsule が取得できない場合を想定して、model.width/height をバックアップとして使用
+            const mWidth = (model.internalModel?.sourceCapsule?.width)
+             || model.width
+             || 100; // デフォルト幅100を設定
+
+            const mHeight = (model.internalModel?.sourceCapsule?.height)
+             || model.height
+             || 100; // デフォルト高さ100を設定
+
+             // 画面サイズ (app.screen) が取得できない場合への対策
+            const screenW = app.screen?.width || window.innerWidth;
+            const screenH = app.screen?.height || window.innerHeight;
+
+            // 比率計算 (0除算を防ぐため、念のためWidth/mHeightが0でないことも考慮)
+            const ratioW = (app.screen.width * 0.8) / Math.max(mWidth,1);
+            const ratioH = (app.screen.height * 0.8) / Math.max(mHeight,1);
             
-            // 縦横どちらもはみ出さない小さい方の比率を採用
+            // 最終的なスケールと配置
             const finalRatio = Math.min(ratioW, ratioH);
             model.scale.set(finalRatio);
             
@@ -53,8 +69,8 @@ async function initLive2D(canvasId, modelUrl) {
             model.anchor.set(0.5, 1.0);
             
             // 画面の中央下部に配置
-            model.x = app.screen.width / 2;
-            model.y = app.screen.height * 0.95; 
+            model.x = screenW / 2;
+            model.y = screenH * 0.95; 
         };
         
         // 初回配置
