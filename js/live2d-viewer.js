@@ -1,9 +1,9 @@
 // live2d-viewer.js - キャンバスにモデルを描画
 
 let currentApp = null;  // 既存のアプリを管理するための変数
+let isLoading = false;  // 読み込み中フラグ
 
 async function initLive2D(canvasId, modelUrl) {
-    const canvas = document.getElementById(canvasId);
     if (isLoading) return; 
     isLoading = true;
 
@@ -30,7 +30,7 @@ async function initLive2D(canvasId, modelUrl) {
     }
 
     //キャンパスを真っ新にして作り直す
-    container.innerHTML = '<canvas id="&{canvasId}"></canvas>'; // 既存の内容をクリア
+    container.innerHTML = `<canvas id="${canvasId}"></canvas>`; // 既存の内容をクリア
     const canvas = document.getElementById(canvasId); // 新しいキャンバスを取得
 
     // PIXIアプリの初期化
