@@ -76,7 +76,8 @@ async function initLive2D(canvasId, modelUrl) {
         // 初回配置
         adjustModel();
         
-        app.stage.addChild(model);   // ステージに追加する前にモデルを準備
+        // ステージに追加する前にモデルを準備
+        app.stage.addChild(model);
         
         // 画面サイズが変わった時に再配置を実行
         app.renderer.on('resize', adjustModel);

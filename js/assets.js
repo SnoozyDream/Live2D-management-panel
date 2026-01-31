@@ -23,8 +23,10 @@ async function refreshDisplay() {
     // 選択中の衣装IDを取得
     const selectedId = getSelectedModel();
 
-    // 選択中のIDに一致するデータを特定
-    const selectedOutfit = allData.find(item => item.id === selectedId);
+    // 選択中のIDに一致かつ、現在のライバー名に一致する衣装データを探す
+    const selectedOutfit = allData.find(
+        item => item.id === selectedId && item.liver === currentLiver
+    );
 
     let path;
     if (selectedOutfit) {
