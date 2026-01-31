@@ -38,9 +38,8 @@ async function initLive2D(canvasId, modelUrl) {
     try {
         // 引数でもらった modelUrl を読み込む
         const model = await PIXI.live2d.Live2DModel.from(modelUrl);
-        app.stage.addChild();   // ステージに追加する前にモデルを準備
-
-       // モデルの配置とサイズを調整する関数
+        
+        // モデルの配置とサイズを調整する関数
         const adjustModel = () => {
             // キャンバスの80%に収める計算
             const ratioW = (app.screen.width * 0.8) / model.internalModel.sourceCapsule.width;  // 横幅比率を正確に取得
@@ -49,7 +48,7 @@ async function initLive2D(canvasId, modelUrl) {
             // 縦横どちらもはみ出さない小さい方の比率を採用
             const finalRatio = Math.min(ratioW, ratioH);
             model.scale.set(finalRatio);
-
+            
             // アンカーを足元中央(0.5, 1.0)に設定
             model.anchor.set(0.5, 1.0);
             
@@ -57,10 +56,12 @@ async function initLive2D(canvasId, modelUrl) {
             model.x = app.screen.width / 2;
             model.y = app.screen.height * 0.95; 
         };
-
+        
         // 初回配置
         adjustModel();
-
+        
+        app.stage.addChild(model);   // ステージに追加する前にモデルを準備
+        
         // 画面サイズが変わった時に再配置を実行
         app.renderer.on('resize', adjustModel);
 
