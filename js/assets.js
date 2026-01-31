@@ -110,9 +110,11 @@ window.changeClothes = async (id) => {
 
     setSelectedModel(id);
     alert(`${target.name} に着替えました！`);
-    loadModels(); // リストのハイライト更新
 
-    // 本来はここでLive2Dのテクスチャ等を差し替えるが、今はログと再描画で表現
+    // リストのハイライト更新
+    loadModels(); 
+
+    // 古いリソースを解放し、新しいモデルURLでLive2Dを再描画する
     refreshDisplay();
 };
 

@@ -11,7 +11,16 @@ async function initLive2D(canvasId, modelUrl) {
 
     // 既存のPIXIアプリがあればリソース開放
     if (currentApp) {
-        currentApp.destroy(true, { children: true, texture: true, baseTexture: true });
+        // 既存のアプリを停止して破棄
+        currentApp.stop();
+
+        // リソースを解放
+        currentApp.destroy(true, { 
+            children: true, 
+            texture: true, 
+            baseTexture: true 
+        });
+        currentApp = null; // 変数をクリア
     }
 
     // PIXIアプリの初期化
