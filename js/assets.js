@@ -16,11 +16,27 @@ window.addEventListener('load', () => {
 });
 
 // 画面とLive2Dを最新状態にする関数
-function refreshDisplay() {
-    const path = getModelPath(currentLiver);
-    const selectedClothes = getSelectedModel();
+async function refreshDisplay() {
+    // 保存されている全データを取得
+    const allData = await getSavedModels();
     
-    console.log(`${currentLiver}が ${selectedClothes} を着用中`);
+    // 選択中の衣装IDを取得
+    const selectedId = getSelectedModel();
+
+    // 選択中のIDに一致するデータを特定
+    const selectedOutfit = allData.find(item => item.id === selectedId);
+
+    let path;
+    if (selectedOutfit) {
+        // 登録した衣装がある場合
+        path = selectedOutfit.modelURL;
+        console.log(`${currentLiver}が登録衣装 [${selectedOutfit.name}] を着用中`);
+    } else {
+        // 登録衣装が無い、または未選択の場合はデフォルトモデルのパスを取得
+        path = getModelPath(currentLiver);
+        console.log(`${currentLiver}がデフォルト衣装を着用中`);
+    }
+    
     initLive2D('live2d-canvas', path);
 }
 
