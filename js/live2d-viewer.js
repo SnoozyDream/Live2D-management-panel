@@ -52,20 +52,23 @@ async function initLive2D(canvasId, modelUrl) {
         // モデルの配置とサイズを調整する関数
         const adjustModel = () => {
             // モデルがまだ準備できていなければ何もしない
-            if (!model || !app.stage) return; // app.stageの存在確認を追加
+            if (!model || !app.stage || !app.renderer) return; // app.stageの存在確認を追加
 
             //sourceCapsule が取得できない場合を想定して、model.width/height をバックアップとして使用
             const mWidth = (model.internalModel?.sourceCapsule?.width)
-             || model.width
-             || 100; // デフォルト幅100を設定
+            || model.width
+            || 100; // デフォルト幅100を設定
 
             const mHeight = (model.internalModel?.sourceCapsule?.height)
-             || model.height
-             || 100; // デフォルト高さ100を設定
+            || model.height
+            || 100; // デフォルト高さ100を設定
+
+            // レンダラーのサイズを親要素に合わせる
+            app.renderer.resize(container.clientWidth, container.clientHeight);
 
             // 画面サイズ (app.screen) が取得できない場合への対策
-            const screenW = app.screen?.width || 300;
-            const screenH = app.screen?.height || 400;
+            const screenW = app.screen.width || 0;
+            const screenH = app.screen.height || 0;
 
             // 比率計算 (0除算を防ぐため、念のためWidth/mHeightが0でないことも考慮)
             const ratioW = (app.screen.width * 0.8) / Math.max(mWidth,1);

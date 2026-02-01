@@ -145,6 +145,24 @@ button:hover {
 
 /* --- スマホなど狭い画面用の微調整 --- */
 @media (max-width: 767px) {
+
+    .card{
+        padding: 15px;
+        overflow-x: auto; /* 横スクロール可能に */
+        display: block; /* テーブルを包むためにblock要素に変更 */
+    }
+
+    table {
+        display: table;   /* テーブルレイアウトを維持 */
+        min-width: 100%;    /* カードの幅いっぱいに広げる */
+        table-layout: fixed; /* 固定レイアウトにする */
+    }
+
+    th, td {
+        font-size: 14px;
+        word-break: break-all; /* 長い単語の折り返しを許可 */
+    }
+
     body {
         flex-direction: column; /* メニューを上に、コンテンツを下に */
     }
