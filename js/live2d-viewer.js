@@ -76,15 +76,13 @@ async function initLive2D(canvasId, modelUrl) {
             const h = container.clientHeight; // 親要素の高さ
 
             app.renderer.resize(w, h); // 一旦リサイズしてから計算
-
+            
             const mWidth = (model.internalModel?.sourceCapsule?.width) || model.width || 100 // デフォルト幅100を設定
             const mHeight = (model.internalModel?.sourceCapsule?.height) || model.height || 100; // デフォルト高さ100を設定
 
-            app.renderer.resize(container.clientWidth, container.clientHeight); // レンダラーのサイズを親要素に合わせる
-
             // 比率計算
-            const ratioW = (w * 0.8) / mWidth; // 横幅の80%に収める
-            const ratioH = (h * 0.8) / mHeight; // 高さの80%に収める
+            const ratioW = (w * 0.8) / Math.max(mWidth, 1); // 幅の80%に収める
+            const ratioH = (h * 0.8) / Math.max(mHeight, 1); // 高さの80%に収める
             const finalRatio = Math.min(ratioW, ratioH); // 最終的なスケールと配置
 
             // スケールを適用
@@ -92,8 +90,8 @@ async function initLive2D(canvasId, modelUrl) {
             model.anchor.set(0.5, 1.0); // アンカーを足元中央(0.5, 1.0)に設定
             
             // 画面の中央下部に配置
-            model.x = screenW / 2; // 横中央
-            model.y = screenH * 0.95; // 画面下部（少し上げる）
+            model.x = w / 2; // 横中央
+            model.y = h * 0.95; // 画面下部（少し上げる）
             }, 100); // 少し遅延させてから実行
         };
         
