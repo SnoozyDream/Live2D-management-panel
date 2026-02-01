@@ -45,15 +45,18 @@ async function initLive2D(canvasId, modelUrl) {
     container.innerHTML = `<canvas id="${canvasId}"></canvas>`; // 既存の内容をクリア
     const canvas = document.getElementById(canvasId); // 新しいキャンバスを取得
 
+    const drp = Math.min(window.devicePixelRatio || 1, 1.5);
+
     // PIXIアプリの初期化
     const app = new PIXI.Application({
         view: canvas,
         autoStart: true,
         resizeTo: container,  // 親要素に合わせる
         backgroundColor: 0xeeeeee,
-        antiailias: true,
-        resolution: window.devicePixelRatio || 1,   // 高解像度ディスプレイ対応
+        antialias: true,
+        resolution: drp,   // デバイスピクセル比を考慮
         autoDensity: true,
+        powerPreference: 'high-performance' // パフォーマンス優先
     });
     currentApp = app;  // 新しいアプリを保存
 
@@ -63,51 +66,42 @@ async function initLive2D(canvasId, modelUrl) {
         
         // モデルの配置とサイズを調整する関数
         const adjustModel = () => {
+
             // モデルがまだ準備できていなければ何もしない
             if (!model || !app.stage || !app.renderer) return; // app.stageの存在確認を追加
 
-            //sourceCapsule が取得できない場合を想定して、model.width/height をバックアップとして使用
-            const mWidth = (model.internalModel?.sourceCapsule?.width)
-            || model.width
-            || 100; // デフォルト幅100を設定
+            // setTimeoutで非同期に実行
+            setTimeout(() => {
+            const w = container.clientWidth; // 親要素の幅
+            const h = container.clientHeight; // 親要素の高さ
 
-            const mHeight = (model.internalModel?.sourceCapsule?.height)
-            || model.height
-            || 100; // デフォルト高さ100を設定
+            app.renderer.resize(w, h); // 一旦リサイズしてから計算
 
-            // レンダラーのサイズを親要素に合わせる
-            app.renderer.resize(container.clientWidth, container.clientHeight);
+            const mWidth = (model.internalModel?.sourceCapsule?.width) || model.width || 100 // デフォルト幅100を設定
+            const mHeight = (model.internalModel?.sourceCapsule?.height) || model.height || 100; // デフォルト高さ100を設定
 
-            // 画面サイズ (app.screen) が取得できない場合への対策
-            const screenW = app.screen.width || 0;
-            const screenH = app.screen.height || 0;
+            app.renderer.resize(container.clientWidth, container.clientHeight); // レンダラーのサイズを親要素に合わせる
 
-            // 比率計算 (0除算を防ぐため、念のためWidth/mHeightが0でないことも考慮)
-            const ratioW = (app.screen.width * 0.8) / Math.max(mWidth,1);
-            const ratioH = (app.screen.height * 0.8) / Math.max(mHeight,1);
-            
-            // 最終的なスケールと配置
-            const finalRatio = Math.min(ratioW, ratioH);
+            // 比率計算
+            const ratioW = (w * 0.8) / mWidth; // 横幅の80%に収める
+            const ratioH = (h * 0.8) / mHeight; // 高さの80%に収める
+            const finalRatio = Math.min(ratioW, ratioH); // 最終的なスケールと配置
 
             // スケールを適用
-            model.scale.set(finalRatio);
-            
-            // アンカーを足元中央(0.5, 1.0)に設定
-            model.anchor.set(0.5, 1.0);
+            model.scale.set(finalRatio); // 均等スケール
+            model.anchor.set(0.5, 1.0); // アンカーを足元中央(0.5, 1.0)に設定
             
             // 画面の中央下部に配置
-            model.x = screenW / 2;
-            model.y = screenH * 0.95; 
+            model.x = screenW / 2; // 横中央
+            model.y = screenH * 0.95; // 画面下部（少し上げる）
+            }, 100); // 少し遅延させてから実行
         };
         
-        // 初回配置
-        adjustModel();
+        adjustModel();// 初回配置
 
-        // ステージに追加する前にモデルを準備
-        app.stage.addChild(model);
+        app.stage.addChild(model);  // ステージに追加する前にモデルを準備
         
-        // 画面サイズが変わった時に再配置を実行
-        app.renderer.on('resize', adjustModel);
+        window.addEventListener('resize', adjustModel); // 画面サイズが変わった時に再配置を実行
 
         // インタラクション
         model.on('hit', (hitAreas) => {
