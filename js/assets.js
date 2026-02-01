@@ -1,4 +1,4 @@
-// assets.js - 司令塔
+// assets.js
 
 const urlParams = new URLSearchParams(window.location.search);
 const currentLiver = urlParams.get('liver') || 'ゲスト';
@@ -70,6 +70,7 @@ if (assetForm) {
         const nameValue = document.getElementById('outfit-name').value;
         const urlValue = document.getElementById('model-url').value;
 
+        // 必須項目のチェック
         if (!nameValue || !urlValue) return alert("登録に必要な項目の入力が足りません。入力してください");
 
         console.log("今保存しようとしているライバー名:", currentLiver);
@@ -77,39 +78,34 @@ if (assetForm) {
         // パスの生存確認
         try {
             const response = await fetch(urlValue, { method: 'HEAD' }); // HEADリクエストで存在確認
-            if (!response.ok) {
-                throw new Error();
-            }
+            if (!response.ok) { throw new Error();}
         } catch (e) {
             alert("指定されたモデルのパスが見つかりません。パスが正しいか、ファイルが配置されているか確認してください。");
             return; // 登録を中断
         }
 
-        // 現在の全データを取得する();
-        const allData = await getSavedModels();
-
-        // 重複しないIDが決まるまでループする
-        let newId = crypto.randomUUID();
-
-        // 「もし newId が既存データのどれかの id と一致してしまったら」ループを回す
-        while (allData.some(item => item.id === newId)) {
-            console.warn("奇跡的な確率でIDが重複しました。再生成します...");
-            newId = crypto.randomUUID(); // 再生成して、再度while条件をチェック
-        }
-
         const dataToSave = {
-            id: newId, //　一意の衣装IDとしてUUIDを使用
+            //id: newId, //　Firebase側で自動生成
             liver: currentLiver, //どのライバーのデータか
             name: nameValue, //衣装名
             modelURL: urlValue, //モデルデータ
-            date: new Date().toLocaleDateString()
+            date: new Date().toLocaleDateString(),
+            createdAt: new Date()
         };
 
-        await window.saveModel(dataToSave);
-        alert(`衣装セットを登録しました！`);
+        try {
+            // Firebaseへの保存
+            const { collection, addDoc } 
+            = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"); // 'outfits' という名前のコレクション（フォルダ）に保存
+        await addDoc(collection(db, 'outfits'), dataToSave); //DBは、firebase.jsで初期化済みのdbを使用
+        alert(`【クラウド】衣装セット「${nameValue}」を登録しました！`);
 
-        // URLを強制的に指定して遷移
+        // URLを強制的に指定してリロード
         window.location.href = `assets.html?liver=${encodeURIComponent(currentLiver)}`;
+        } catch (e) {
+        console.error("Firebase保存エラー: ", e);
+        alert("クラウドへの保存に失敗しました。時間を置くか、設定を確認してください。")
+        }
     });
 }
 

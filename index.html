@@ -34,3 +34,26 @@
 </body>
 
 </html>
+<script type="module">
+  // Firebaseの機能を必要な分だけインポート
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  // 設定情報を貼り付け
+  const firebaseConfig = {
+    apiKey: "AIzaSyDlGhC_YV1UkD6jMKJy7fX31LqMYGiheEo",
+    authDomain: "live2d-asset-manager.firebaseapp.com",
+    projectId: "live2d-asset-manager",
+    storageBucket: "live2d-asset-manager.firebasestorage.app",
+    messagingSenderId: "459618368641",
+    appId: "1:459618368641:web:9e72bbee06bf9ef17c6180",
+    measurementId: "G-WBEQYDQX7K"
+  };
+
+  // FirebaseとFirestoreを起動
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // ここに「保存する関数」や「読み出す関数」を書く
+  console.log("Firebase接続成功！");
+</script>
