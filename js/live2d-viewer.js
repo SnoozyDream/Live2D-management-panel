@@ -5,6 +5,18 @@ let isLoading = false;  // 読み込み中フラグ
 
 async function initLive2D(canvasId, modelUrl) {
     if (isLoading) return; 
+
+    try {
+        const check = await fetch(modelUrl, { method: 'HEAD' });
+        if (!check.ok) {
+            alert(`モデルデータが見つかりませんでした。\nパス: ${modelUrl}`);
+            return; // 描画処理を中止
+        }
+    } catch (e) {
+        alert("通信エラーまたはファイルへのアクセスが拒否されました。");
+        return;
+    }
+
     isLoading = true;
 
     const container = document.querySelector('.preview-section')

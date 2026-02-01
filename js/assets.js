@@ -19,7 +19,7 @@ window.addEventListener('load', () => {
 async function refreshDisplay() {
     // 保存されている全データを取得
     const allData = await getSavedModels();
-    
+
     // 選択中の衣装IDを取得
     const selectedId = getSelectedModel();
 
@@ -38,7 +38,7 @@ async function refreshDisplay() {
         path = getModelPath(currentLiver);
         console.log(`${currentLiver}がデフォルト衣装を着用中`);
     }
-    
+
     initLive2D('live2d-canvas', path);
 }
 
@@ -50,7 +50,7 @@ async function loadModels() {
     // 現在のリストをクリアしてから再構築
     const myData = await getSavedModels();
     const filteredData = myData.filter(item => item.liver === currentLiver);
-    
+
     const currentActive = getSelectedModel();
 
     listItems.innerHTML = filteredData.map((model) => `
@@ -74,6 +74,17 @@ if (assetForm) {
 
         console.log("今保存しようとしているライバー名:", currentLiver);
 
+        // パスの生存確認
+        try {
+            const response = await fetch(urlValue, { method: 'HEAD' }); // HEADリクエストで存在確認
+            if (!response.ok) {
+                throw new Error();
+            }
+        } catch (e) {
+            alert("指定されたモデルのパスが見つかりません。パスが正しいか、ファイルが配置されているか確認してください。");
+            return; // 登録を中断
+        }
+
         // 現在の全データを取得する();
         const allData = await getSavedModels();
 
@@ -86,7 +97,7 @@ if (assetForm) {
             newId = crypto.randomUUID(); // 再生成して、再度while条件をチェック
         }
 
-        const dataToSave ={
+        const dataToSave = {
             id: newId, //　一意の衣装IDとしてUUIDを使用
             liver: currentLiver, //どのライバーのデータか
             name: nameValue, //衣装名
@@ -94,11 +105,11 @@ if (assetForm) {
             date: new Date().toLocaleDateString()
         };
 
-            await window.saveModel(dataToSave);
-            alert(`衣装セットを登録しました！`);
+        await window.saveModel(dataToSave);
+        alert(`衣装セットを登録しました！`);
 
-            // URLを強制的に指定して遷移
-            window.location.href = `assets.html?liver=${encodeURIComponent(currentLiver)}`;
+        // URLを強制的に指定して遷移
+        window.location.href = `assets.html?liver=${encodeURIComponent(currentLiver)}`;
     });
 }
 
@@ -114,7 +125,7 @@ window.changeClothes = async (id) => {
     alert(`${target.name} に着替えました！`);
 
     // リストのハイライト更新
-    loadModels(); 
+    loadModels();
 
     // 古いリソースを解放し、新しいモデルURLでLive2Dを再描画する
     refreshDisplay();
@@ -134,7 +145,7 @@ window.deleteAction = async (id) => {
         await window.deleteModelData(target);
         alert('削除が完了しました');
         location.reload();
-    }else{
+    } else {
         alert('エラー：削除対象が見つかりません');
     }
 };
