@@ -82,6 +82,11 @@ th {
 td {
     padding: 12px;
     border-bottom: 1px solid #ddd;
+
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 /* テーブルの行をホバーした時に色を変える */
@@ -116,7 +121,7 @@ button:hover {
         flex-direction: column; /* 設定とプレビューは縦に並べる */
         gap: 20px;
     }
-    
+
     /* assets用の横並び設定 ＋ 個別ページ用の設定をまとめる */
     .assets-container,
     .liver-detail-container { 
