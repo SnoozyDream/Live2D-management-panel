@@ -43,6 +43,7 @@ async function refreshDisplay() {
     // 選択中のIDが "デフォルト" でないなら、FirebaseからURLを取る
     if (selectedId && selectedId !== 'デフォルト') {
         try {
+            const docRef = doc(db, 'outfits', selectedId);
             const docSnap = await getDocs(docRef);
 
             if (docSnap.exists()) {
