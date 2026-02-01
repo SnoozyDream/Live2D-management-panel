@@ -2,7 +2,7 @@
 
 // Firebase SDKのインポート
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // Firebaseの設定情報
 const firebaseConfig = {
@@ -66,18 +66,34 @@ async function loadModels() {
     const listItems = document.getElementById('list-items');
     if (!listItems) return;
 
-    // 現在のリストをクリアしてから再構築
-    const myData = await getSavedModels();
-    const filteredData = myData.filter(item => item.liver === currentLiver);
+    try{
+        // クエリの作成: 現在のライバー名に一致するドキュメントを取得し、作成日時でソート
+        const q = query(
+            collection(db, 'outfits'),
+            where("liver", "==", currentLiver),
+            orderBy("createdAt", "asc")
+        );
+        
+        const querySnapshot = await getDocs(q); // クエリの実行
+        const myData = []; // データ格納用配列
 
-    const currentActive = getSelectedModel();
+        // 取得したドキュメントを配列に変換
+        querySnapshot.forEach((doc) => {
+            myData.push({ id: doc.id, ...doc.data() } ); // FirebaseのIDをidとして含めてスプレッド構文にして配列にする
+        });
 
-    listItems.innerHTML = filteredData.map((model) => `
-        <li onclick="changeClothes('${model.id}')" style="cursor:pointer; ${model.id === currentActive ? 'background:#d1e7ff;' : ''}">
-            <span>${model.name}</span>
-            <button onclick="event.stopPropagation(); deleteAction('${model.id}')">削除</button>
-        </li>
-    `).join('');
+        const currentActive = getSelectedModel();
+        
+        listItems.innerHTML = myData.map((model) => `
+            <li onclick="changeClothes('${model.id}')" style="cursor:pointer; ${model.id === currentActive ? 'background:#d1e7ff;' : ''}">
+                <span>${model.name}</span>
+                <button onclick="event.stopPropagation(); deleteAction('${model.id}')">削除</button>
+            </li>
+        `).join('');
+    } catch (e) {
+        console.error("Firebase読み込みエラー: ", e);
+        alert("クラウドからのデータ取得に失敗しました。時間を置くか、設定を確認してください。")
+    }
 }
 
 // --- CREATE: 登録 ---
