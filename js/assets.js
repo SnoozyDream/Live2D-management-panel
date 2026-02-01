@@ -1,5 +1,24 @@
 // assets.js
 
+// Firebase SDKのインポート
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+// Firebaseの設定情報
+const firebaseConfig = {
+    apiKey: "AIzaSyDlGhC_YV1UkD6jMKJy7fX31LqMYGiheEo",
+    authDomain: "live2d-asset-manager.firebaseapp.com",
+    projectId: "live2d-asset-manager",
+    storageBucket: "live2d-asset-manager.firebasestorage.app",
+    messagingSenderId: "459618368641",
+    appId: "1:459618368641:web:9e72bbee06bf9ef17c6180",
+    measurementId: "G-WBEQYDQX7K"
+};
+
+// Firebaseの初期化
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 const urlParams = new URLSearchParams(window.location.search);
 const currentLiver = urlParams.get('liver') || 'ゲスト';
 
@@ -94,9 +113,6 @@ if (assetForm) {
         };
 
         try {
-            // Firebaseへの保存
-            const { collection, addDoc } 
-            = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"); // 'outfits' という名前のコレクション（フォルダ）に保存
         await addDoc(collection(db, 'outfits'), dataToSave); //DBは、firebase.jsで初期化済みのdbを使用
         alert(`【クラウド】衣装セット「${nameValue}」を登録しました！`);
 
