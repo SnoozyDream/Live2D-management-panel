@@ -176,8 +176,15 @@ button:hover {
         padding: 20px;
     }
 
-    /* スマホでは縦並びに戻す */
-    .liver-detail-container {
+    .liver-detail-container { /* 個別ページ用 */
         flex-direction: column;
+    }
+
+    .preview-section {
+        position: relative;  /* stickyを解除 */
+        height: 50vh; /* 画面の高さの半分をプレビューに使う */
+        min-height: 350px;
+        width: 100%;
+        margin-bottom: 20px;
     }
 }
