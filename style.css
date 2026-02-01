@@ -1,3 +1,5 @@
+/* style.css */
+
 /* --- 共通レイアウト --- */
 body {
     font-family: sans-serif;
@@ -82,10 +84,12 @@ td {
     border-bottom: 1px solid #ddd;
 }
 
+/* テーブルの行をホバーした時に色を変える */
 tr:hover {
     background-color: #f9f9f9;
 }
 
+/* 共通ボタン設定 */
 button {
     cursor: pointer;
     transition: 0.2s;
@@ -93,4 +97,64 @@ button {
 
 button:hover {
     opacity: 0.8;
+}
+
+/* --- タブレット・PC向けレスポンシブ対応 --- */
+@media (min-width: 768px) {
+    /* サイドメニューを少しスリムに */
+    nav {
+        width: 180px;
+    }
+
+    main {
+        padding: 20px;
+    }
+  
+    .main-content-wrapper {
+        flex: 1; /* 残りの幅を全部使う */
+        display: flex;
+        flex-direction: column; /* 設定とプレビューは縦に並べる */
+        gap: 20px;
+    }
+    
+    /* assets用の横並び設定 ＋ 個別ページ用の設定をまとめる */
+    .assets-container,
+    .liver-detail-container { 
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+    }
+
+    .preview-section {
+        flex: 1; /* 左側：モデル表示エリアを広げる */
+        position: sticky; /* スクロールしてもモデルが画面内に残る */
+        top: 20px;
+    }
+
+    .card {
+        flex: 0 0 350px; /* 右側：カードの幅を固定 */
+        max-height: 90vh;
+        overflow-y: auto; /* カード内が長い場合はスクロール可能に */
+    }
+}
+
+/* --- スマホなど狭い画面用の微調整 --- */
+@media (max-width: 767px) {
+    body {
+        flex-direction: column; /* メニューを上に、コンテンツを下に */
+    }
+    
+    nav {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    main {
+        padding: 20px;
+    }
+
+    /* スマホでは縦並びに戻す */
+    .liver-detail-container {
+        flex-direction: column;
+    }
 }
