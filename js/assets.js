@@ -2,7 +2,7 @@
 
 // Firebase SDKのインポート
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, query, where, orderB, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // Firebaseの設定情報
 const firebaseConfig = {
@@ -168,12 +168,20 @@ window.deleteAction = async (id) => {
     //IDが一致する「消したいデータ」を特定
     const target = allData.find(item => item.id === id);
 
-    if (target) {
-        // storage.js などの削除関数を呼ぶ
-        await window.deleteModelData(target);
-        alert('削除が完了しました');
-        location.reload();
-    } else {
-        alert('エラー：削除対象が見つかりません');
+    try {
+        // Firestoreからデータを削除
+        await deleteDoc(doc(db, 'outfits', id)); // db(初期化済みのインスタンス)、`outfits`(コレクション名)、id(ドキュメントID)を指定して削除
+        alert('クラウドから削除が完了しました');
+        loadModels(); // 一覧を再表示
+
+        // 選択中の衣装が削除された場合、選択を解除してデフォルト衣装に戻す
+        const selectedId = getSelectedModel();
+        if (selectedId === id) {
+           localStorage.remobeItem('selectedModel'); // 選択解除
+            refreshDisplay();
+        }
+    } catch (e) {
+        console.error("Firebase削除エラー: ", e);
+        alert('削除に失敗しました。時間を置くか、設定を確認してください。');
     }
 };
