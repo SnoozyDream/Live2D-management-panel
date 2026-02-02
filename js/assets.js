@@ -43,19 +43,18 @@ async function refreshDisplay() {
     // 選択中のIDが "デフォルト" でないなら、FirebaseからURLを取る
     if (selectedId && selectedId !== 'デフォルト') {
         try {
-            const docRef = doc(db, 'outfits', selectedId);
-            const docSnap = await getDocs(docRef);
+            const docSnap = await getDocs(doc(db, 'outfits', selectedId));
 
             if (docSnap.exists()) {
                 // 登録した衣装がある場合
                 path = selectedOutfit.modelURL;
                 console.log(`${currentLiver}が衣装を着用中`, docSnap.data().name);
-            } 
-        }catch (e) {
-                console.error("表示更新エラー: ", e);
             }
+        } catch (e) {
+            console.error("表示更新エラー: ", e);
         }
-    
+    }
+
     // Firebaseにデータがない、またはデフォルトの場合は元のパスを使う
     if (!path) {
         path = getModelPath(currentLiver);
@@ -147,8 +146,7 @@ if (assetForm) {
 // --- UPDATE (表示切り替え): 衣装選択 ---
 window.changeClothes = async (id) => {
 
-    const docRef = doc(db, 'outfits', id);
-    const docSnap = await getDocs(docRef);
+    const docSnap = await getDocs(doc(db, 'outfits', id));
     try {
         const target = docSnap.data();
 
