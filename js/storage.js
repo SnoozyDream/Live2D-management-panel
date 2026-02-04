@@ -27,7 +27,7 @@ window.setSelectedModel = function (modelName) {
 }
 
 // --- (getter) 選択されている衣装名を取得 ---
-window.getSelectedModel() = function() {
+window.getSelectedModel = function() {
     return localStorage.getItem(SELECTED_KEY) || "デフォルト";
 }
 
