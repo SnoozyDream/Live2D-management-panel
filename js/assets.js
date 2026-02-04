@@ -16,21 +16,21 @@ const firebaseConfig = {
 };
 
 // Firebaseの初期化
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const app = initializeApp(firebaseConfig); // Firebaseアプリの初期化
+const db = getFirestore(app);              // Firestoreデータベースの初期化
 
-const urlParams = new URLSearchParams(window.location.search);
-const currentLiver = urlParams.get('liver') || 'ゲスト';
+const urlParams = new URLSearchParams(window.location.search); // URLパラメータの取得
+const currentLiver = urlParams.get('liver') || 'ゲスト';       // ライバー名の取得、なければ'ゲスト'
 
 window.addEventListener('load', () => {
-    // 1. タイトル反映
+    // タイトル反映
     const titleElement = document.querySelector('h1');
     if (titleElement) titleElement.textContent = `${currentLiver} さんの衣装設定`;
 
-    // 2. 初期表示 (Live2D)
+    // 初期表示 (Live2D)
     refreshDisplay();
 
-    // 3. 一覧表示
+    // 一覧表示
     loadModels();
 });
 
@@ -38,33 +38,43 @@ window.addEventListener('load', () => {
 async function refreshDisplay() {
     const selectedId = getSelectedModel(); // 選択中の衣装IDを取得
 
-    let path;
+    // 特殊なIDや空の場合は、即座にデフォルトを表示して終了
+    const isSpecialId = !selectedId || ['デフォルト', 'null', 'undefined'].includes(selectedId); // ガード：特殊なIDや空の場合は、即座にデフォルトを表示して終了
+    
+    // デフォルトモデルの表示
+    if (isSpecialId) {
+        showDefaultModel();
+        return;
+    }
 
-    // 有効なID（予約語意外）がある場合のみ、Firebaseへ問い合わせ
-    if (selectedId && !['デフォルト', 'null', 'undefined'].includes(selectedId)) {
-        try {
-            const docSnap = await getDoc(doc(db, 'outfits', selectedId));
+    try {
+        // Firebaseから選択中の衣装データを取得
+        const docSnap = await getDoc(doc(db, 'outfits', selectedId));
 
-            if (docSnap.exists()) {
-                // 登録した衣装がある場合
-                path = docSnap.data().modelURL;
-                console.log(`${currentLiver}が衣装を着用中`, docSnap.data().name);
-            } else {
-                // IDはあるけどFirebase側にデータがない場合（削除済みなど）
-                console.warn("有効な衣装IDではなかったため、デフォルトを表示します");
-                localStorage.removeItem('selected_liver_model'); // 不整合を防ぐために削除
-            }
-        } catch (e) {
-            console.error("表示更新エラー: ", e);
+        // データが存在しない場合のガード
+        if (!docSnap.exists()) { // データが存在しない場合
+            console.warn("データがないためリセットします");
+            localStorage.removeItem('selected_liver_model');
+            showDefaultModel(); // デフォルトモデルの表示
+            return;
         }
-    }
 
-    // Firebaseにデータがない、またはデフォルトの場合は元のパスを使う
-    if (!path) {
-        path = getModelPath(currentLiver);
-        console.log(`${currentLiver}がデフォルト衣装を着用中`);
+        // データが存在する場合
+        const data = docSnap.data(); // データ取得
+        console.log(`${currentLiver}が着用中:`, data.name);
+        initLive2D('live2d-canvas', data.modelURL); // Live2D初期化関数にモデルURLを渡す
+
+    } catch (e) {
+        console.error("表示更新エラー: ", e);
+        showDefaultModel(); // エラー時もデフォルトに逃がす
     }
-    initLive2D('live2d-canvas', path);
+}
+
+// デフォルトモデルの表示
+function showDefaultModel() {
+    const path = getModelPath(currentLiver); // デフォルトモデルのパスを取得
+    console.log(`${currentLiver}がデフォルト衣装を着用中`);
+    initLive2D('live2d-canvas', path); // Live2D初期化関数にデフォルトモデルのパスを渡す
 }
 
 // --- READ: 一覧表示 ---
@@ -73,6 +83,7 @@ async function loadModels() {
     if (!listItems) return;
 
     try {
+
         // クエリの作成: 現在のライバー名に一致するドキュメントを取得し、作成日時でソート
         const q = query(
             collection(db, 'outfits'),
@@ -80,22 +91,20 @@ async function loadModels() {
             orderBy("createdAt", "asc")
         );
 
+        // クエリの実行とデータ取得
         const querySnapshot = await getDocs(q); // クエリの実行
-        const myData = []; // データ格納用配列
+        const currentActive = getSelectedModel(); // 選択中の衣装IDを取得
 
-        // 取得したドキュメントを配列に変換
-        querySnapshot.forEach((doc) => {
-            myData.push({ id: doc.id, ...doc.data() }); // FirebaseのIDをidとして含めてスプレッド構文にして配列にする
-        });
+        const myData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); // データ格納配列
 
-        const currentActive = getSelectedModel();
+        listItems.innerHTML = myData.length > 0
+            ? myData.map(model => `
+                <li onclick="changeClothes('${model.id}')" style="cursor:pointer; ${model.id === currentActive ? 'background:#d1e7ff;' : ''}">
+                    <span>${model.name}</span>
+                    <button onclick="event.stopPropagation(); deleteAction('${model.id}')">削除</button>
+                </li>`).join('')
+            : '<li>衣装が登録されていません</li>';
 
-        listItems.innerHTML = myData.map((model) => `
-            <li onclick="changeClothes('${model.id}')" style="cursor:pointer; ${model.id === currentActive ? 'background:#d1e7ff;' : ''}">
-                <span>${model.name}</span>
-                <button onclick="event.stopPropagation(); deleteAction('${model.id}')">削除</button>
-            </li>
-        `).join('');
     } catch (e) {
         console.error("Firebase読み込みエラー: ", e);
         alert("クラウドからのデータ取得に失敗しました。時間を置くか、設定を確認してください。")
@@ -122,15 +131,16 @@ if (assetForm) {
             if (!response.ok) { throw new Error(); }
         } catch (e) {
             alert("指定されたモデルのパスが見つかりません。パスが正しいか、ファイルが配置されているか確認してください。");
-            return; // 登録を中断
+            return;
         }
 
+        // 保存データの構築
         const dataToSave = {
-            //id: newId, //　Firebase側で自動生成
-            liver: currentLiver, //どのライバーのデータか
-            name: nameValue, //衣装名
-            modelURL: urlValue, //モデルデータ
-            createdAt: new Date()
+            //id: newId,            //　Firebase側で自動生成
+            liver: currentLiver,    //どのライバーのデータか
+            name: nameValue,        //衣装名
+            modelURL: urlValue,     //モデルデータ
+            createdAt: new Date()   //作成日時
         };
 
         try {
@@ -152,14 +162,20 @@ window.changeClothes = async (id) => {
         // Firestoreからデータを取得して存在確認
         const docSnap = await getDoc(doc(db, 'outfits', id));
 
-        // データが存在する場合のみ選択を反映
-        if (docSnap.exists()) {
-            setSelectedModel(id);
-            alert(`${data.name} に着替えました！`);
-
-            loadModels(); // リストのハイライト更新
-            refreshDisplay(); // Live2D再描画
+        // データが存在しない場合のガード処理
+        if (!docSnap.exists()) {
+            console.warn("対象の衣装が見つかりません:", id);
+            return;
         }
+
+        const data = docSnap.data(); // 通知の為のデータ取得
+
+        setSelectedModel(id); // 選択中の衣装IDを保存
+        alert(`${data.name} に着替えました！`);
+
+        loadModels(); // リストのハイライト更新
+        refreshDisplay(); // Live2D再描画
+
     } catch (e) {
         console.error("着替えエラー: ", e);
     };
@@ -175,7 +191,7 @@ window.deleteAction = async (id) => {
         alert('クラウドから削除が完了しました');
 
         if (getSelectedModel() === id) {
-            setSelectedModel('selectedModel'); // 選択解除
+            setSelectedModel('デフォルト'); // 選択解除
         }
         loadModels();
         refreshDisplay();

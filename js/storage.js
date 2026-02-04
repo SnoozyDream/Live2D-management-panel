@@ -22,16 +22,15 @@ window.getModelPath = function(name) {
 
 // --- (setter) 今どの衣装を選択しているかを保存 ---
 // FirebaseのドキュメントIDをLocalStorageにメモする
-function setSelectedModel(modelName) {
+window.setSelectedModel = function (modelName) {
     localStorage.setItem(SELECTED_KEY, modelName);
 }
 
 // --- (getter) 選択されている衣装名を取得 ---
-function getSelectedModel() {
+window.getSelectedModel() = function() {
     return localStorage.getItem(SELECTED_KEY) || "デフォルト";
 }
 
-// --- 💡 互換性のための「空」の関数 ---
 // assets.js 側でまだ呼び出している場合、エラーにならないように中身を空にして残す
 window.getSavedModels = async function() {
     return []; // クラウド版ではFirebaseから直接取得するので、ここは常に空
