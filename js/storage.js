@@ -1,6 +1,5 @@
 // storage.js データ管理担当
 
-const STORAGE_KEY = 'live2d_models';
 const SELECTED_KEY = 'selected_liver_model';
 
 // ライバーとモデルの対応表
@@ -21,35 +20,8 @@ window.getModelPath = function(name) {
     return path;
 }
 
-// --- 関数: 全データを取得する ---
-window.getSavedModels = async function() {
-    // 実際にはここで fetch('/api/models') などをする
-    return new Promise((resolve) => {
-        setTimeout(() => { // 擬似的な非同期処理
-            const data = localStorage.getItem(STORAGE_KEY);
-            resolve(data ? JSON.parse(data) : []);
-        }, 100); // 100msの遅延
-    });
-}
-
-// --- 関数: 新しい衣装を保存する ---
-window.saveModel = async function(newModel) {
-    const data = await window.getSavedModels(); // 非同期で取得
-    data.push(newModel);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    console.log("DB(Local)に保存完了:", data);
-};
-
-// --- 関数: 特定の衣装を削除する ---
-window.deleteModelData = async function(targetItem) {
-    const allData = await getSavedModels();
-    // ターゲット（ライバー名と衣装名の組み合わせ）が一致しないものだけ残す
-    const newData = allData.filter(item => item.id !== targetItem.id);
-
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
-}
-
 // --- (setter) 今どの衣装を選択しているかを保存 ---
+// FirebaseのドキュメントIDをLocalStorageにメモする
 function setSelectedModel(modelName) {
     localStorage.setItem(SELECTED_KEY, modelName);
 }
@@ -57,4 +29,10 @@ function setSelectedModel(modelName) {
 // --- (getter) 選択されている衣装名を取得 ---
 function getSelectedModel() {
     return localStorage.getItem(SELECTED_KEY) || "デフォルト";
+}
+
+// --- 💡 互換性のための「空」の関数 ---
+// assets.js 側でまだ呼び出している場合、エラーにならないように中身を空にして残す
+window.getSavedModels = async function() {
+    return []; // クラウド版ではFirebaseから直接取得するので、ここは常に空
 }

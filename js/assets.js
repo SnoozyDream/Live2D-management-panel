@@ -2,7 +2,7 @@
 
 // Firebase SDKのインポート
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, getDoc, query, where, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // Firebaseの設定情報
 const firebaseConfig = {
@@ -40,8 +40,8 @@ async function refreshDisplay() {
 
     let path;
 
-    // IDがそもそも存在し、特別なキーワード（デフォルト等）でない場合のみトライ
-    if (selectedId &&  !['デフォルト','null','undefined'].includes(selectedId)) {
+    // 有効なID（予約語意外）がある場合のみ、Firebaseへ問い合わせ
+    if (selectedId && !['デフォルト', 'null', 'undefined'].includes(selectedId)) {
         try {
             const docSnap = await getDoc(doc(db, 'outfits', selectedId));
 
@@ -130,13 +130,12 @@ if (assetForm) {
             liver: currentLiver, //どのライバーのデータか
             name: nameValue, //衣装名
             modelURL: urlValue, //モデルデータ
-            date: new Date().toLocaleDateString(),
             createdAt: new Date()
         };
 
         try {
             await addDoc(collection(db, 'outfits'), dataToSave); //DBは、firebase.jsで初期化済みのdbを使用
-            alert(`【クラウド】衣装セット「${nameValue}」を登録しました！`);
+            alert(`「${nameValue}」を登録しました！`);
 
             // URLを強制的に指定してリロード
             window.location.href = `assets.html?liver=${encodeURIComponent(currentLiver)}`;
@@ -149,11 +148,11 @@ if (assetForm) {
 
 // --- UPDATE (表示切り替え): 衣装選択 ---
 window.changeClothes = async (id) => {
-
-    const docSnap = await getDocs(doc(db, 'outfits', id));
     try {
-        const target = docSnap.data();
+        // Firestoreからデータを取得して存在確認
+        const docSnap = await getDoc(doc(db, 'outfits', id));
 
+        // データが存在する場合のみ選択を反映
         if (docSnap.exists()) {
             setSelectedModel(id);
             alert(`${target.name} に着替えました！`);
@@ -174,14 +173,12 @@ window.deleteAction = async (id) => {
         // Firestoreからデータを削除
         await deleteDoc(doc(db, 'outfits', id)); // db(初期化済みのインスタンス)、`outfits`(コレクション名)、id(ドキュメントID)を指定して削除
         alert('クラウドから削除が完了しました');
-        loadModels(); // 一覧を再表示
 
-        // 選択中の衣装が削除された場合、選択を解除してデフォルト衣装に戻す
-        const selectedId = getSelectedModel();
-        if (selectedId === id) {
-            localStorage.removeItem('selectedModel'); // 選択解除
-            refreshDisplay();
+        if (getSelectedModel() === id) {
+            setSelectedModel('selectedModel'); // 選択解除
         }
+        loadModels();
+        refreshDisplay();
     } catch (e) {
         console.error("Firebase削除エラー: ", e);
         alert('削除に失敗しました。時間を置くか、設定を確認してください。');
