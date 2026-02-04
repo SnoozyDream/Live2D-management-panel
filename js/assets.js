@@ -1,5 +1,7 @@
 // assets.js
 
+import { getModelPath, setSelectedModel, getSelectedModel, getSavedModels } from './storage.js';
+
 // Firebase SDKのインポート
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, getDoc, query, where, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";

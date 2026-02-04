@@ -10,7 +10,7 @@ const LIVER_MODELS = {
 };
 
 // --- 関数: ライバー名からモデルのパスを返す ---
-window.getModelPath = function(name) {
+export function getModelPath(name) {
     const path = LIVER_MODELS[name];
     if (!path) {
         console.warn(`警告: ${name} のパスが見つからないため、ゲスト用を表示します`);
@@ -22,16 +22,16 @@ window.getModelPath = function(name) {
 
 // --- (setter) 今どの衣装を選択しているかを保存 ---
 // FirebaseのドキュメントIDをLocalStorageにメモする
-window.setSelectedModel = function (modelName) {
+export function setSelectedModel(modelName) {
     localStorage.setItem(SELECTED_KEY, modelName);
 }
 
 // --- (getter) 選択されている衣装名を取得 ---
-window.getSelectedModel = function() {
+export function getSelectedModel() {
     return localStorage.getItem(SELECTED_KEY) || "デフォルト";
 }
 
 // assets.js 側でまだ呼び出している場合、エラーにならないように中身を空にして残す
-window.getSavedModels = async function() {
+export function getSavedModels() {
     return []; // クラウド版ではFirebaseから直接取得するので、ここは常に空
 }
