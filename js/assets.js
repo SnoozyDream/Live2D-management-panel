@@ -40,15 +40,19 @@ async function refreshDisplay() {
 
     let path;
 
-    // 選択中のIDが "デフォルト" でないなら、FirebaseからURLを取る
-    if (selectedId && selectedId !== 'デフォルト') {
+    // IDがそもそも存在し、特別なキーワード（デフォルト等）でない場合のみトライ
+    if (selectedId &&  !['デフォルト','null','undefined'].includes(selectedId)) {
         try {
-            const docSnap = await getDocs(doc(db, 'outfits', selectedId));
+            const docSnap = await getDoc(doc(db, 'outfits', selectedId));
 
             if (docSnap.exists()) {
                 // 登録した衣装がある場合
-                path = selectedOutfit.modelURL;
+                path = docSnap.data().modelURL;
                 console.log(`${currentLiver}が衣装を着用中`, docSnap.data().name);
+            } else {
+                // IDはあるけどFirebase側にデータがない場合（削除済みなど）
+                console.warn("有効な衣装IDではなかったため、デフォルトを表示します");
+                localStorage.removeItem('selected_liver_model'); // 不整合を防ぐために削除
             }
         } catch (e) {
             console.error("表示更新エラー: ", e);
