@@ -155,7 +155,7 @@ window.changeClothes = async (id) => {
         // データが存在する場合のみ選択を反映
         if (docSnap.exists()) {
             setSelectedModel(id);
-            alert(`${target.name} に着替えました！`);
+            alert(`${data.name} に着替えました！`);
 
             loadModels(); // リストのハイライト更新
             refreshDisplay(); // Live2D再描画
