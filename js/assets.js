@@ -85,31 +85,45 @@ async function loadModels() {
     if (!listItems) return;
 
     try {
-
-        // クエリの作成: 現在のライバー名に一致するドキュメントを取得し、作成日時でソート
         const q = query(
             collection(db, 'outfits'),
             where("liver", "==", currentLiver),
             orderBy("createdAt", "asc")
         );
 
-        // クエリの実行とデータ取得
-        const querySnapshot = await getDocs(q); // クエリの実行
-        const currentActive = getSelectedModel(); // 選択中の衣装IDを取得
+        const querySnapshot = await getDocs(q);
+        const currentActive = getSelectedModel();
+        const myData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-        const myData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); // データ格納配列
-
+        // HTMLを生成（onclickを消して、クラスとdata-idを付与）
         listItems.innerHTML = myData.length > 0
             ? myData.map(model => `
-                <li onclick="changeClothes('${model.id}')" style="cursor:pointer; ${model.id === currentActive ? 'background:#d1e7ff;' : ''}">
+                <li class="model-item" data-id="${model.id}" style="cursor:pointer; ${model.id === currentActive ? 'background:#d1e7ff;' : ''}">
                     <span>${model.name}</span>
-                    <button onclick="event.stopPropagation(); deleteAction('${model.id}')">削除</button>
+                    <button class="delete-btn" data-id="${model.id}">削除</button>
                 </li>`).join('')
             : '<li>衣装が登録されていません</li>';
 
+        // 生成した要素にイベントリスナーをつける（これがプロの技！）
+        // --- 着替えの処理 ---
+        listItems.querySelectorAll('.model-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const id = item.getAttribute('data-id');
+                changeClothes(id);
+            });
+        });
+
+        // --- 削除の処理 ---
+        listItems.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation(); // li側のクリックイベント（着替え）が動かないようにする
+                const id = btn.getAttribute('data-id');
+                deleteAction(id);
+            });
+        });
+
     } catch (e) {
         console.error("Firebase読み込みエラー: ", e);
-        alert("クラウドからのデータ取得に失敗しました。時間を置くか、設定を確認してください。")
     }
 }
 
@@ -159,7 +173,7 @@ if (assetForm) {
 }
 
 // --- UPDATE (表示切り替え): 衣装選択 ---
-window.changeClothes = async (id) => {
+async function changeClothes(id) {
     try {
         // Firestoreからデータを取得して存在確認
         const docSnap = await getDoc(doc(db, 'outfits', id));
@@ -184,7 +198,7 @@ window.changeClothes = async (id) => {
 }
 
 // --- DELETE: 削除 ---
-window.deleteAction = async (id) => {
+async function deleteAction(id) {
     if (!confirm('本当にこの衣装を削除しますか？')) return;
 
     try {
