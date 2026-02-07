@@ -62,7 +62,7 @@ async function addLiver(name) {
       name: name,
       createdAt: serverTimestamp()
     });
-    alert('${name} さんを登録しました！');
+    alert(`${name} さんを登録しました！`);
     location.reload(); //登録したら画面を更新
   } catch (e) {
     console.error("登録エラー:", e);
