@@ -1,10 +1,12 @@
 // assets.js
-
-import { getModelPath, setSelectedModel, getSelectedModel, getSavedModels } from './storage.js';
+import { getModelPath, setSelectedModel, getSelectedModel } from './storage.js';
 
 // Firebase SDKのインポート
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, getDoc, query, where, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import {
+    getFirestore, collection, doc, setDoc, getDocs, getDoc,
+    query, where, orderBy, deleteDoc, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // Firebaseの設定情報
 const firebaseConfig = {
@@ -17,66 +19,35 @@ const firebaseConfig = {
     measurementId: "G-WBEQYDQX7K"
 };
 
-// Firebaseの初期化
-const app = initializeApp(firebaseConfig); // Firebaseアプリの初期化
-const db = getFirestore(app);              // Firestoreデータベースの初期化
+// 初期化
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-const urlParams = new URLSearchParams(window.location.search); // URLパラメータの取得
-const currentLiver = urlParams.get('liver') || 'ゲスト';       // ライバー名の取得、なければ'ゲスト'
+const urlParams = new URLSearchParams(window.location.search);
+const currentLiverName = urlParams.get('liver') || 'ゲスト';
+const currentLiverId = urlParams.get('id') || 'guest_id';
 
+// --- 初期化処理 ---
 window.addEventListener('load', () => {
-    // タイトル反映
     const titleElement = document.querySelector('h1');
-    if (titleElement) titleElement.textContent = `${currentLiver} さんの衣装設定`;
-
-    // 初期表示 (Live2D)
+    if (titleElement) titleElement.textContent = `${currentLiverName} さんの衣装設定`;
     refreshDisplay();
-
-    // 一覧表示
     loadModels();
 });
 
-// 画面とLive2Dを最新状態にする関数
-async function refreshDisplay() {
-    const selectedId = getSelectedModel(); // 選択中の衣装IDを取得
-
-    // 特殊なIDや空の場合は、即座にデフォルトを表示して終了
-    const isSpecialId = !selectedId || ['デフォルト', 'null', 'undefined'].includes(selectedId); // ガード：特殊なIDや空の場合は、即座にデフォルトを表示して終了
-    
-    // デフォルトモデルの表示
-    if (isSpecialId) {
-        showDefaultModel();
-        return;
-    }
-
+// --- ライバー登録関数 ---
+async function registerLiver(liverName) {
     try {
-        // Firebaseから選択中の衣装データを取得
-        const docSnap = await getDoc(doc(db, 'outfits', selectedId));
-
-        // データが存在しない場合のガード
-        if (!docSnap.exists()) { // データが存在しない場合
-            console.warn("データがないためリセットします");
-            localStorage.removeItem('selected_liver_model');
-            showDefaultModel(); // デフォルトモデルの表示
-            return;
-        }
-
-        // データが存在する場合
-        const data = docSnap.data(); // データ取得
-        console.log(`${currentLiver}が着用中:`, data.name);
-        initLive2D('live2d-canvas', data.modelURL); // Live2D初期化関数にモデルURLを渡す
-
-    } catch (e) {
-        console.error("表示更新エラー: ", e);
-        showDefaultModel(); // エラー時もデフォルトに逃がす
-    }
-}
-
-// デフォルトモデルの表示
-function showDefaultModel() {
-    const path = getModelPath(currentLiver); // デフォルトモデルのパスを取得
-    console.log(`${currentLiver}がデフォルト衣装を着用中`);
-    initLive2D('live2d-canvas', path); // Live2D初期化関数にデフォルトモデルのパスを渡す
+        const liverId = crypto.randomUUID();
+        await setDoc(doc(db, "livers", liverId), {
+            id: liverId,
+            name: liverName,
+            createdAt: serverTimestamp(),
+            mainOutfitId: null
+        });
+        console.log("ライバー登録成功:", liverId);
+        return liverId;
+    } catch (e) { console.error("ライバー登録エラー:", e); }
 }
 
 // --- READ: 一覧表示 ---
@@ -87,132 +58,116 @@ async function loadModels() {
     try {
         const q = query(
             collection(db, 'outfits'),
-            where("liver", "==", currentLiver),
+            where("liverId", "==", currentLiverId), // IDで紐付け
             orderBy("createdAt", "asc")
         );
 
         const querySnapshot = await getDocs(q);
         const currentActive = getSelectedModel();
-        const myData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-        // HTMLを生成（onclickを消して、クラスとdata-idを付与）
-        listItems.innerHTML = myData.length > 0
-            ? myData.map(model => `
-                <li class="model-item" data-id="${model.id}" style="cursor:pointer; ${model.id === currentActive ? 'background:#d1e7ff;' : ''}">
-                    <span>${model.name}</span>
-                    <button class="delete-btn" data-id="${model.id}">削除</button>
-                </li>`).join('')
-            : '<li>衣装が登録されていません</li>';
+        listItems.innerHTML = querySnapshot.empty
+            ? '<li>衣装が登録されていません</li>'
+            : querySnapshot.docs.map(doc => {
+                const data = doc.data();
+                return `
+                    <li class="model-item" data-id="${doc.id}" style="cursor:pointer; ${doc.id === currentActive ? 'background:#d1e7ff;' : ''}">
+                        <span>${data.name}</span> <button class="delete-btn" data-id="${doc.id}">削除</button>
+                    </li>`;
+            }).join('');
 
-        // 生成した要素にイベントリスナーをつける（これがプロの技！）
-        // --- 着替えの処理 ---
-        listItems.querySelectorAll('.model-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const id = item.getAttribute('data-id');
-                changeClothes(id);
-            });
-        });
-
-        // --- 削除の処理 ---
-        listItems.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation(); // li側のクリックイベント（着替え）が動かないようにする
-                const id = btn.getAttribute('data-id');
-                deleteAction(id);
-            });
-        });
-
-    } catch (e) {
-        console.error("Firebase読み込みエラー: ", e);
-    }
+        // リスナー登録
+        setupEventListeners(listItems);
+    } catch (e) { console.error("Firebase読み込みエラー: ", e); }
 }
 
-// --- CREATE: 登録 ---
+// --- CREATE: 登録処理 ---
 const assetForm = document.getElementById('asset-form');
 if (assetForm) {
     assetForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-
         const nameValue = document.getElementById('outfit-name').value;
         const urlValue = document.getElementById('model-url').value;
 
-        // 必須項目のチェック
-        if (!nameValue || !urlValue) return alert("登録に必要な項目の入力が足りません。入力してください");
+        if (!nameValue || !urlValue) return alert("入力が足りません");
 
-        console.log("今保存しようとしているライバー名:", currentLiver);
-
-        // パスの生存確認
         try {
-            const response = await fetch(urlValue, { method: 'HEAD' }); // HEADリクエストで存在確認
-            if (!response.ok) { throw new Error(); }
-        } catch (e) {
-            alert("指定されたモデルのパスが見つかりません。パスが正しいか、ファイルが配置されているか確認してください。");
-            return;
-        }
+            const res = await fetch(urlValue, { method: 'HEAD' });
+            if (!res.ok) throw new Error();
+        } catch { return alert("モデルのパスが正しくありません"); }
 
-        // 保存データの構築
+        const outfitId = crypto.randomUUID();
         const dataToSave = {
-            //id: newId,            //　Firebase側で自動生成
-            liver: currentLiver,    //どのライバーのデータか
-            name: nameValue,        //衣装名
-            modelURL: urlValue,     //モデルデータ
-            createdAt: new Date()   //作成日時
+            id: outfitId,
+            liverId: currentLiverId,
+            liverName: currentLiverName,
+            name: nameValue,
+            modelURL: urlValue,
+            createdAt: serverTimestamp()
         };
 
         try {
-            await addDoc(collection(db, 'outfits'), dataToSave); //DBは、firebase.jsで初期化済みのdbを使用
+            await setDoc(doc(db, 'outfits', outfitId), dataToSave);
             alert(`「${nameValue}」を登録しました！`);
-
-            // URLを強制的に指定してリロード
-            window.location.href = `assets.html?liver=${encodeURIComponent(currentLiver)}`;
-        } catch (e) {
-            console.error("Firebase保存エラー: ", e);
-            alert("クラウドへの保存に失敗しました。時間を置くか、設定を確認してください。")
-        }
+            location.reload();
+        } catch (e) { console.error("Firebase保存エラー: ", e); }
     });
 }
 
-// --- UPDATE (表示切り替え): 衣装選択 ---
-async function changeClothes(id) {
-    try {
-        // Firestoreからデータを取得して存在確認
-        const docSnap = await getDoc(doc(db, 'outfits', id));
+// --- イベントリスナー設定 ---
+function setupEventListeners(listItems) {
+    listItems.querySelectorAll('.model-item').forEach(item => {
+        item.addEventListener('click', () => changeClothes(item.getAttribute('data-id')));
+    });
 
-        // データが存在しない場合のガード処理
-        if (!docSnap.exists()) {
-            console.warn("対象の衣装が見つかりません:", id);
-            return;
-        }
-
-        const data = docSnap.data(); // 通知の為のデータ取得
-
-        setSelectedModel(id); // 選択中の衣装IDを保存
-        alert(`${data.name} に着替えました！`);
-
-        loadModels(); // リストのハイライト更新
-        refreshDisplay(); // Live2D再描画
-
-    } catch (e) {
-        console.error("着替えエラー: ", e);
-    };
+    listItems.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            deleteAction(btn.getAttribute('data-id'));
+        });
+    });
 }
 
-// --- DELETE: 削除 ---
-async function deleteAction(id) {
-    if (!confirm('本当にこの衣装を削除しますか？')) return;
-
+// --- 衣装選択・削除・表示更新ロジック ---
+async function changeClothes(id) {
     try {
-        // Firestoreからデータを削除
-        await deleteDoc(doc(db, 'outfits', id)); // db(初期化済みのインスタンス)、`outfits`(コレクション名)、id(ドキュメントID)を指定して削除
-        alert('クラウドから削除が完了しました');
-
-        if (getSelectedModel() === id) {
-            setSelectedModel('デフォルト'); // 選択解除
-        }
+        const docSnap = await getDoc(doc(db, 'outfits', id));
+        if (!docSnap.exists()) return;
+        const data = docSnap.data();
+        setSelectedModel(id);
+        alert(`${data.name} に着替えました！`);
         loadModels();
         refreshDisplay();
-    } catch (e) {
-        console.error("Firebase削除エラー: ", e);
-        alert('削除に失敗しました。時間を置くか、設定を確認してください。');
+    } catch (e) { console.error("着替えエラー:", e); }
+}
+
+async function deleteAction(id) {
+    if (!confirm('本当に削除します?')) return;
+    try {
+        await deleteDoc(doc(db, 'outfits', id));
+        if (getSelectedModel() === id) setSelectedModel('デフォルト');
+        loadModels();
+        refreshDisplay();
+    } catch (e) { console.error("削除エラー:", e); }
+}
+
+async function refreshDisplay() {
+    const selectedId = getSelectedModel();
+    if (!selectedId || ['デフォルト', 'null', 'undefined'].includes(selectedId)) {
+        showDefaultModel();
+        return;
     }
-};
+    try {
+        const docSnap = await getDoc(doc(db, 'outfits', selectedId));
+        if (!docSnap.exists()) {
+            showDefaultModel();
+            return;
+        }
+        const data = docSnap.data();
+        initLive2D('live2d-canvas', data.modelURL);
+    } catch (e) { showDefaultModel(); }
+}
+
+function showDefaultModel() {
+    const path = getModelPath(currentLiverName);
+    initLive2D('live2d-canvas', path);
+}

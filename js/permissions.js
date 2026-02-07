@@ -1,50 +1,74 @@
 //permissions.js
 
-const STORAGE_KEY = 'live2d_models';
-const tableBody = document.getElementById('liver-table-body');
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-document.addEventListener('DOMContentLoaded', function () {
+// Firebaseの設定情報
+const firebaseConfig = {
+  apiKey: "AIzaSyDlGhC_YV1UkD6jMKJy7fX31LqMYGiheEo",
+  authDomain: "live2d-asset-manager.firebaseapp.com",
+  projectId: "live2d-asset-manager",
+  storageBucket: "live2d-asset-manager.firebasestorage.app",
+  messagingSenderId: "459618368641",
+  appId: "1:459618368641:web:9e72bbee06bf9ef17c6180",
+  measurementId: "G-WBEQYDQX7K"
+};
+
+// 初期化
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+document.addEventListener('DOMContentLoaded', async function () {
+  const tableBody = document.getElementById('liver-table-body');
 
   //tablebodyが見つからない場合は処理を中断
   if (!tableBody) return;
 
-  //デフォルトのライバーデータ
-  let livers = [
-    { name: 'hiyori', costumes: '通常、冬服、部屋着', status: '● 利用可能', color: '#27ae60' },
-    { name: 'miku', costumes: '通常、冬服、部屋着', status: '△ 承認待ち', color: '#f39c12' }
-  ];
+  try {
+    //Firestoreからliversコレクションを取得
+    const querySnapshot = await getDocs(collection(db, "livers"));
 
-  //STORAGE_KRYを使ってデータを取得
-  const savedModels = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-
-  //保存データがあれば、それぞれに該当するライバーに衣装を追加する
-  savedModels.forEach(model => {
-    // model.liver（データの持ち主）と一致する人を livers 配列から探す
-    const targetLiver = livers.find(l => l.name === model.liver);
-    
-    // 見つかった場合、その人の衣装にモデル名を追加
-    if (targetLiver) {
-      // 既存の衣装にカンマ区切りで追加
-      targetLiver.costumes += `、` + model.name;
-    }
-  });
-
-  //テーブルのhtmlを組み立てる
-  let htmlContent = '';
-  livers.forEach(liver => {
-    htmlContent += `
+    //取得したデータをhtmlに変換
+    let htmlContent = '';
+    querySnapshot.forEach((doc) => {
+      const liver = doc.data();
+      htmlContent += `
         <tr>
             <td>${liver.name}</td>
-            <td>${liver.costumes}</td>
-            <td><span style="color: ${liver.color};">${liver.status}</span></td>
+            <td>${"準備中"}</td>
+            <td><span style="color: #27ae60;">● 利用可能</span></td>
             <td>
                 <button type="button">編集</button>
-                <a href="assets.html?liver=${liver.name}" class="btn-live2d">Live2D設定</a>
+                <a href="assets.html?liver=${liver.name}&id=${liver.id}" class="btn-live2d">Live2D設定</a>
             </td>
-        </tr>
-        `;
-  });
+        </tr>`;
+    });
 
-  //テーブルに流し込む
-  tableBody.innerHTML = htmlContent;
+    //テーブルに流し込む
+    tableBody.innerHTML = htmlContent || '<tr><td colspan="4">ライバーが登録されていません</td></tr>';
+  } catch (error) {
+    console.error("データ取得エラー:", e);
+    tableBody.innerHTML = '<tr><td colspan="4">読み込みエラーが発生しました</td></tr>';
+  }
 });
+
+async function addLiver(name) {
+  if (!name) return alert("追加するライバー名を入力してください");
+
+  try {
+    const liverId = crypto.randomUUID();
+    await setDoc(doc(db, "livers", liverId), {
+      id: liverId,
+      name: name,
+      createdAt: serverTimestamp()
+    });
+    alert('${name} さんを登録しました！');
+    location.reload(); //登録したら画面を更新
+  } catch (e) {
+    console.error("登録エラー:", e);
+    alert("登録に失敗しました");
+  }
+}
+
+// ボタンから呼び出せるように公開する
+window.addLiver = addLiver;
