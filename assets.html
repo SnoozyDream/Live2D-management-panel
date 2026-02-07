@@ -22,23 +22,33 @@
   </nav>
 
   <main class="assets-container">
-    <aside class="model-list card">
-      <h2>登録モデル一覧</h2>
-      <ul id="list-items"></ul>
-    </aside>
-
-    <div class="main-content-wrapper">
+    <div class="control-panel">
       <section class="upload-section card">
         <h2>モデル設定</h2>
-        <p class="file-hint">.moc3, .json, .png を選択してください</p>
+        <p class="file-hint">対応形式: .moc3, .model3.json (Live2D Cubism 3.0以降)</p>
 
         <form id="asset-form" novalidate>
-          <input type="text" id="outfit-name" placeholder="衣装名(例：冬服)" required>
-          <input type="text" id="model-url" placeholder="モデルデータのURLまたはパスを入力" required>
-          <button type="submit">設定を保存</button>
+          <div class="input-group">
+            <label for="outfit-name"></label>
+            <input type="text" id="outfit-name" placeholder="衣装名(例：2026年冬服モデル)" required>
+          </div>
+
+          <div class="input-group">
+            <label for="model-url">モデルデータの格納パス</label>
+            <input type="text" id="model-url" placeholder="models/hiyori/hiyori.model3.json" required>
+          </div>
+
+          <button type="submit" class="submit-btn">この衣装を保存する</button>
         </form>
       </section>
 
+      <aside class="model-list card">
+        <h2>登録モデル一覧</h2>
+        <ul id="list-items"></ul>
+      </aside>
+    </div>
+
+    <div class="main-content-wrapper">
       <section class="preview-section card">
         <canvas id="live2d-canvas"></canvas>
         <div class="controls">

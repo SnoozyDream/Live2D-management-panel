@@ -106,6 +106,7 @@ button:hover {
 
 /* --- タブレット・PC向けレスポンシブ対応 --- */
 @media (min-width: 768px) {
+
     /* サイドメニューを少しスリムに */
     nav {
         width: 180px;
@@ -114,75 +115,126 @@ button:hover {
     main {
         padding: 20px;
     }
-  
+
     .main-content-wrapper {
-        flex: 1; /* 残りの幅を全部使う */
-        display: flex;
-        flex-direction: column; /* 設定とプレビューは縦に並べる */
-        gap: 20px;
+        width: 100%;
     }
 
-    /* assets用の横並び設定 ＋ 個別ページ用の設定をまとめる */
-    .assets-container,
-    .liver-detail-container { 
+    /* 個別ページ用 */
+    .assets-container {
         display: flex;
+        flex-direction: row;
+        /* 横並びに */
         gap: 20px;
         align-items: flex-start;
     }
 
+    .control-panel {
+        flex: 0 0 380px;
+        /* 左側を380pxで固定 */
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .main-content-wrapper {
+        flex: 1;
+        /* 右側は残りの幅を全部使う */
+    }
+
     .preview-section {
-        flex: 1; /* 左側：モデル表示エリアを広げる */
-        position: sticky; /* スクロールしてもモデルが画面内に残る */
+        position: sticky;
+        /* 画面に固定 */
         top: 20px;
+        /* 上から20pxの位置に固定 */
+        min-height: 600px;
+        /* キャンパスが縦に伸びすぎないよう調節 */
     }
 
     .card {
-        flex: 0 0 350px; /* 右側：カードの幅を固定 */
+        width: 100%;
+        /* 右側：カードの幅を固定 */
         max-height: 90vh;
-        overflow-y: auto; /* カード内が長い場合はスクロール可能に */
+        /* 画面の90%を超えないように */
+        overflow-y: auto;
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        margin-bottom: 15px;
+    }
+
+    .input-group label {
+        font-size: 0.9rem;
+        font-weight: bold;
+        color: #555;
+    }
+
+    .file-hint {
+        font-size: 0.85rem;
+        color: #e67e22;
+        /* 少し注意を引く色に */
+        background: #fff5e6;
+        padding: 8px;
+        border-radius: 4px;
+        border-left: 4px solid #e67e22;
+        margin-bottom: 20px;
     }
 }
 
 /* --- スマホなど狭い画面用の微調整 --- */
 @media (max-width: 767px) {
 
-    .card{
+    .card {
         padding: 15px;
-        overflow-x: auto; /* 横スクロール可能に */
-        display: block; /* テーブルを包むためにblock要素に変更 */
+        overflow-x: auto;
+        /* 横スクロール可能に */
+        display: block;
+        /* テーブルを包むためにblock要素に変更 */
     }
 
     table {
-        display: table;   /* テーブルレイアウトを維持 */
-        min-width: 100%;    /* カードの幅いっぱいに広げる */
-        table-layout: fixed; /* 固定レイアウトにする */
+        display: table;
+        /* テーブルレイアウトを維持 */
+        min-width: 100%;
+        /* カードの幅いっぱいに広げる */
+        table-layout: fixed;
+        /* 固定レイアウトにする */
     }
 
-    th, td {
+    th,
+    td {
         font-size: 14px;
-        word-break: break-all; /* 長い単語の折り返しを許可 */
+        word-break: break-all;
+        /* 長い単語の折り返しを許可 */
     }
 
     body {
-        flex-direction: column; /* メニューを上に、コンテンツを下に */
+        flex-direction: column;
+        /* メニューを上に、コンテンツを下に */
     }
-    
+
     nav {
         width: 100%;
         box-sizing: border-box;
     }
-    
+
     main {
         padding: 20px;
     }
 
-    .liver-detail-container { /* 個別ページ用 */
+    .liver-detail-container {
+        /* 個別ページ用 */
         flex-direction: column;
     }
 
     .preview-section {
-        position: relative;  /* stickyを解除 */
-        height: 50vh; /* 画面の高さの半分をプレビューに使う */
+        position: relative;
+        /* stickyを解除 */
+        height: 50vh;
+        /* 画面の高さの半分をプレビューに使う */
         min-height: 350px;
         width: 100%;
         margin-bottom: 20px;
