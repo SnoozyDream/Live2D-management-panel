@@ -19,7 +19,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 document.addEventListener('DOMContentLoaded', async function () {
-  const tableBody = document.getElementById('liver-table-body');
+  const tableBody = document.getElementById('liver-table-body').value = '';
 
   //tablebodyが見つからない場合は処理を中断
   if (!tableBody) return;
