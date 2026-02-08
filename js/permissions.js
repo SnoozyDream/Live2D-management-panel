@@ -1,7 +1,7 @@
 //permissions.js
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // Firebaseの設定情報
 const firebaseConfig = {
@@ -38,8 +38,8 @@ document.addEventListener('DOMContentLoaded', async function () {
             <td>${"準備中"}</td>
             <td><span style="color: #27ae60;">● 利用可能</span></td>
             <td>
-                <button type="button">編集</button>
                 <a href="assets.html?liver=${liver.name}&id=${liver.id}" class="btn-live2d">Live2D設定</a>
+                <button onclick="deleteLiver('${liver.name}','${liver.id}')">削除</button>
             </td>
         </tr>`;
     });
@@ -76,3 +76,21 @@ async function addLiver(name) {
 
 // ボタンから呼び出せるように公開する
 window.addLiver = addLiver;
+
+async function deleteLiver(name,id) {
+  
+  if(!window.confirm(`${name} さんを削除します。本当によろしいですか？`)){
+    return; // キャンセルされたらここで処理を終了
+  }
+
+  try {
+    await deleteDoc(doc(db, "livers", id));
+    alert("削除が完了しました。");
+    location.reload(); //削除したら画面を更新
+  } catch (e) {
+    console.error("削除エラー:", e);
+    alert("削除に失敗しました");
+  }
+}
+
+window.deleteLiver = deleteLiver;
