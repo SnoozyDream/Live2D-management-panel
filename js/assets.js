@@ -90,11 +90,13 @@ if (assetForm) {
 
         if (!nameValue || !urlValue) return alert("入力が足りません");
 
+        /*
         try {
             const res = await fetch(urlValue, { method: 'HEAD' });
             if (!res.ok) throw new Error();
         } catch { return alert("モデルのパスが正しくありません"); }
-
+        */
+       
         const outfitId = crypto.randomUUID();
         const dataToSave = {
             id: outfitId,
