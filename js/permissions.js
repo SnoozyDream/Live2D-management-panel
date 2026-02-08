@@ -19,7 +19,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 document.addEventListener('DOMContentLoaded', async function () {
-  const tableBody = document.getElementById('liver-table-body').value = '';
+  const tableBody = document.getElementById('liver-table-body');
 
   //tablebodyが見つからない場合は処理を中断
   if (!tableBody) return;
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     //テーブルに流し込む
     tableBody.innerHTML = htmlContent || '<tr><td colspan="4">ライバーが登録されていません</td></tr>';
-  } catch (error) {
+  } catch (e) {
     console.error("データ取得エラー:", e);
     tableBody.innerHTML = '<tr><td colspan="4">読み込みエラーが発生しました</td></tr>';
   }
@@ -63,6 +63,10 @@ async function addLiver(name) {
       createdAt: serverTimestamp()
     });
     alert(`${name} さんを登録しました！`);
+
+    const inputField = document.getElementById('new-liver-name');
+    if (inputField) inputField.value = '';
+
     location.reload(); //登録したら画面を更新
   } catch (e) {
     console.error("登録エラー:", e);
