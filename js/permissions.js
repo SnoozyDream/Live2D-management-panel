@@ -19,7 +19,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 document.addEventListener('DOMContentLoaded', async function () {
-  const gridContainer = document.getElementById('liver-table-body');
+  const gridContainer = document.getElementById('liver-grid-container');
 
   //gridContainerが見つからない場合は処理を中断
   if (!gridContainer) return;
