@@ -27,9 +27,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     const querySnapshot = await getDocs(collection(db, "livers"));
     
     // 衣装全データを一旦取得（効率化のためループの外で一回だけ取る）
-    const assetsSnapshot = await getDocs(collection(db, "assets"));
-    const allAssets = [];
-    assetsSnapshot.forEach(doc => allAssets.push(doc.data()));
+    const assetsSnapshot = await getDocs(collection(db, "outfits"));
+    const allOutfits = [];
+    outfitsSnapshot.forEach(doc => allOutfits.push(doc.data()));
 
     let htmlContent = '';
 
@@ -39,9 +39,9 @@ document.addEventListener('DOMContentLoaded', async function () {
 
       // このライバーが持っている衣装をフィルタリング
       // (asset.owners という配列の中に liver.id が含まれているかチェック)
-      const myAssets = allAssets
-        .filter(asset => asset.owners && asset.owners.includes(liver.id))
-        .map(asset => asset.name);
+      const myAssets = allOutfits
+        .filter(outfit => outfit.liver === liver.name) // 名前で紐付け
+        .map(outfit => outfit.name);
 
       const assetsText = myAssets.length > 0 ? myAssets.join(', ') : 'なし';
 
