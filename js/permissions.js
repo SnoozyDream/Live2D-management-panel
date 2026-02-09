@@ -20,36 +20,48 @@ const db = getFirestore(app);
 
 document.addEventListener('DOMContentLoaded', async function () {
   const gridContainer = document.getElementById('liver-grid-container');
-
-  //gridContainerが見つからない場合は処理を中断
   if (!gridContainer) return;
 
   try {
-    //Firestoreからliversコレクションを取得
+    // 全ライバーを取得
     const querySnapshot = await getDocs(collection(db, "livers"));
+    
+    // 衣装全データを一旦取得（効率化のためループの外で一回だけ取る）
+    const assetsSnapshot = await getDocs(collection(db, "assets"));
+    const allAssets = [];
+    assetsSnapshot.forEach(doc => allAssets.push(doc.data()));
 
-    //取得したデータをhtmlに変換
     let htmlContent = '';
-    querySnapshot.forEach((doc) => {
-      const liver = doc.data();
 
+    // for...of ループで一人ずつ処理
+    for (const liverDoc of querySnapshot.docs) {
+      const liver = liverDoc.data();
+
+      // このライバーが持っている衣装をフィルタリング
+      // (asset.owners という配列の中に liver.id が含まれているかチェック)
+      const myAssets = allAssets
+        .filter(asset => asset.owners && asset.owners.includes(liver.id))
+        .map(asset => asset.name);
+
+      const assetsText = myAssets.length > 0 ? myAssets.join(', ') : 'なし';
+
+      // HTML生成
       htmlContent += `
         <div class="liver-card">
             <div class="status-badge">● 利用可能</div>
             <h3>${liver.name}</h3>
             <div class="info">
-                <p>所有衣装: 準備中</p>
-                <p>ID: ${liver.id.substring(0, 8)}...</p>
+                <p>所有衣装: <strong>${assetsText}</strong></p> 
+                <p style="font-size: 0.8rem; color: #888;">ID: ${liver.id.substring(0, 8)}...</p>
             </div>
             <div class="actions">
-                <a href="assets.html?liver=${liver.name}&id=${liver.id}" class="btn-live2d" style="flex: 1;">Live2D設定</a>
+                <a href="assets.html?liver=${liver.name}&id=${liver.id}" class="btn-live2d" style="flex: 1; text-decoration: none; text-align: center; line-height: 40px;">Live2D設定</a>
                 <button class="delete-btn" onclick="deleteLiver('${liver.name}','${liver.id}')" style="flex: 0 0 auto;">削除</button>
             </div>
         </div>`;
-    });
+    }
 
-    //グリッドコンテナに流し込む
-    gridContainer.innerHTML = htmlContent || '<p style="grid-column: 1/-1; text-align: center;">ライバーが登録されていません</p>';;
+    gridContainer.innerHTML = htmlContent || '<p style="grid-column: 1/-1; text-align: center;">ライバーが登録されていません</p>';
   } catch (e) {
     console.error("データ取得エラー:", e);
     gridContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">読み込みエラーが発生しました</p>';
