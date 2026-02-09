@@ -125,6 +125,33 @@ td {
     box-shadow: 0 15px 40px rgba(0,0,0,0.1);
 }
 
+.input-row {
+    display: flex;
+    gap: 12px;
+}
+
+.input-row input {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.input-row input:focus {
+    border-color: var(--primary-color);
+}
+
+.registration-area {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    border: 1px dashed #cbd5e0;
+}
+
 /* --- レスポンシブ設定--- */
 /* タブレット・PC向け (横幅 768px 以上) */
 @media (min-width: 768px) {
