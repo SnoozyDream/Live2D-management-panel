@@ -26,33 +26,31 @@ document.addEventListener('DOMContentLoaded', async function () {
     // 全ライバーを取得
     const querySnapshot = await getDocs(collection(db, "livers"));
     
-    // 衣装全データを一旦取得（効率化のためループの外で一回だけ取る）
-    const assetsSnapshot = await getDocs(collection(db, "outfits"));
+    // 衣装データを取得（outfitsコレクションを指定）
+    const outfitsSnapshot = await getDocs(collection(db, "outfits"));
     const allOutfits = [];
     outfitsSnapshot.forEach(doc => allOutfits.push(doc.data()));
 
     let htmlContent = '';
 
-    // for...of ループで一人ずつ処理
+    // ライバーごとにループしてHTMLを作成
     for (const liverDoc of querySnapshot.docs) {
       const liver = liverDoc.data();
 
-      // このライバーが持っている衣装をフィルタリング
-      // (asset.owners という配列の中に liver.id が含まれているかチェック)
+      // このライバーの名前(liver.name)と、衣装データの(outfit.liver)を紐付け
       const myAssets = allOutfits
-        .filter(outfit => outfit.liver === liver.name) // 名前で紐付け
+        .filter(outfit => outfit.liver === liver.name)
         .map(outfit => outfit.name);
 
       const assetsText = myAssets.length > 0 ? myAssets.join(', ') : 'なし';
 
-      // HTML生成
       htmlContent += `
         <div class="liver-card">
             <div class="status-badge">● 利用可能</div>
             <h3>${liver.name}</h3>
             <div class="info">
                 <p>所有衣装: <strong>${assetsText}</strong></p> 
-                <p style="font-size: 0.8rem; color: #888;">ID: ${liver.id.substring(0, 8)}...</p>
+                <p style="font-size: 0.8rem; color: #888;">ID: ${liver.id ? liver.id.substring(0, 8) : 'unknown'}...</p>
             </div>
             <div class="actions">
                 <a href="assets.html?liver=${liver.name}&id=${liver.id}" class="btn-live2d" style="flex: 1; text-decoration: none; text-align: center; line-height: 40px;">Live2D設定</a>
@@ -63,8 +61,9 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     gridContainer.innerHTML = htmlContent || '<p style="grid-column: 1/-1; text-align: center;">ライバーが登録されていません</p>';
   } catch (e) {
-    console.error("データ取得エラー:", e);
-    gridContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">読み込みエラーが発生しました</p>';
+    // コンソールに詳細なエラーを出して原因を特定しやすくする
+    console.error("Firebaseデータ取得エラーの詳細:", e);
+    gridContainer.innerHTML = `<p style="grid-column: 1/-1; text-align: center;">読み込みエラーが発生しました<br><span style="font-size:0.8rem; color:red;">${e.message}</span></p>`;
   }
 });
 
