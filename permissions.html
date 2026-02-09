@@ -7,6 +7,16 @@
     <title>Live2D 権限管理 | Portfolio</title>
     <link rel="stylesheet" href="style.css">
     <script src="js/permissions.js" type="module"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+    </style>
 </head>
 
 <body>
@@ -17,21 +27,20 @@
     </nav>
     <main>
         <div class="card">
-    <h1>👥 衣装権限管理システム</h1>
-    
-    <div style="background: #f4f7f6; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px dashed #ccc;">
-        <h3 style="margin-top: 0;">➕ 新規ライバーを登録</h3>
-        <div style="display: flex; gap: 10px;">
-            <input type="text" id="new-liver-name" placeholder="ライバー名を入力（例：ユークリッド）" 
-                   style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
-            <button type="button" 
-                    onclick="addLiver(document.getElementById('new-liver-name').value)"
-                    style="background: #1a1a2e; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">
-                新規登録
-            </button>
-        </div>
-    </div>
-    <p>ライバーごとの新衣装・アセットの利用権限を制御します。</p>
+            <h1>👥 衣装権限管理システム</h1>
+
+            <div class="registration-area card">
+                <h3>➕ 新規ライバーを登録</h3>
+                <div class="input-row">
+                    <input type="text" id="new-liver-name" placeholder="ライバー名を入力（例：ユークリッド）">
+                    <button type="button" class="submit-btn"
+                        onclick="addLiver(document.getElementById('new-liver-name').value)">
+                        新規登録
+                    </button>
+                </div>
+            </div>
+            
+            <p>ライバーごとの新衣装・アセットの利用権限を制御します。</p>
             <table>
                 <thead>
                     <tr>

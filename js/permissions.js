@@ -19,10 +19,10 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 document.addEventListener('DOMContentLoaded', async function () {
-  const tableBody = document.getElementById('liver-table-body');
+  const gridContainer = document.getElementById('liver-table-body');
 
-  //tablebodyが見つからない場合は処理を中断
-  if (!tableBody) return;
+  //gridContainerが見つからない場合は処理を中断
+  if (!gridContainer) return;
 
   try {
     //Firestoreからliversコレクションを取得
@@ -32,23 +32,28 @@ document.addEventListener('DOMContentLoaded', async function () {
     let htmlContent = '';
     querySnapshot.forEach((doc) => {
       const liver = doc.data();
+
       htmlContent += `
         <tr>
-            <td>${liver.name}</td>
-            <td>${"準備中"}</td>
-            <td><span style="color: #27ae60;">● 利用可能</span></td>
-            <td>
-                <a href="assets.html?liver=${liver.name}&id=${liver.id}" class="btn-live2d">Live2D設定</a>
-                <button onclick="deleteLiver('${liver.name}','${liver.id}')">削除</button>
-            </td>
-        </tr>`;
+        <div class="liver-card">
+            <div class="status-badge">● 利用可能</div>
+            <h3>${liver.name}</h3>
+            <div class="info">
+                <p>所有衣装: 準備中</p>
+                <p>ID: ${liver.id.substring(0, 8)}...</p>
+            </div>
+            <div class="actions">
+                <a href="assets.html?liver=${liver.name}&id=${liver.id}" class="btn-live2d" style="flex: 1;">Live2D設定</a>
+                <button class="delete-btn" onclick="deleteLiver('${liver.name}','${liver.id}')" style="flex: 0 0 auto;">削除</button>
+            </div>
+        </div>`;
     });
 
-    //テーブルに流し込む
-    tableBody.innerHTML = htmlContent || '<tr><td colspan="4">ライバーが登録されていません</td></tr>';
+    //グリッドコンテナに流し込む
+    gridContainer.innerHTML = htmlContent || '<p style="grid-column: 1/-1; text-align: center;">ライバーが登録されていません</p>';;
   } catch (e) {
     console.error("データ取得エラー:", e);
-    tableBody.innerHTML = '<tr><td colspan="4">読み込みエラーが発生しました</td></tr>';
+    gridContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">読み込みエラーが発生しました</p>';
   }
 });
 
@@ -77,9 +82,9 @@ async function addLiver(name) {
 // ボタンから呼び出せるように公開する
 window.addLiver = addLiver;
 
-async function deleteLiver(name,id) {
-  
-  if(!window.confirm(`${name} さんを削除します。本当によろしいですか？`)){
+async function deleteLiver(name, id) {
+
+  if (!window.confirm(`${name} さんを削除します。本当によろしいですか？`)) {
     return; // キャンセルされたらここで処理を終了
   }
 
