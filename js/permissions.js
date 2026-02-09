@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
       // このライバーの名前(liver.name)と、衣装データの(outfit.liver)を紐付け
       const myAssets = allOutfits
-        .filter(outfit => outfit.liver === liver.name)
+        .filter(outfit => outfit.liverName === liver.name)
         .map(outfit => outfit.name);
 
       const assetsText = myAssets.length > 0 ? myAssets.join(', ') : 'なし';
