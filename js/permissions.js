@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', async function () {
       const liver = doc.data();
 
       htmlContent += `
-        <tr>
         <div class="liver-card">
             <div class="status-badge">● 利用可能</div>
             <h3>${liver.name}</h3>
