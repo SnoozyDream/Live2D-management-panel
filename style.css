@@ -1,7 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Sans+JP:wght@400;700&display=swap');
 
 :root {
-    --primary-color: #4361ee; /* 鮮やかな青 */
+    --primary-color: #4361ee;
+    /* 鮮やかな青 */
     --primary-gradient: linear-gradient(135deg, #4361ee 0%, #3f37c9 100%);
     --bg-color: #f0f2f5;
     --sidebar-color: #1a1a2e;
@@ -24,7 +25,7 @@ nav {
     width: 240px;
     background: var(--sidebar-color);
     padding: 30px 20px;
-    box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
 }
 
 nav h3 {
@@ -32,14 +33,15 @@ nav h3 {
     letter-spacing: 1px;
     color: #fff;
     opacity: 0.9;
-    border-bottom: 2px solid rgba(255,255,255,0.1);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
     padding-bottom: 15px;
 }
 
 nav a {
     border-radius: 8px;
     margin-bottom: 5px;
-    padding: 12px 15px !important; /* 強制的に余白確保 */
+    padding: 12px 15px !important;
+    /* 強制的に余白確保 */
 }
 
 nav a:hover {
@@ -51,13 +53,16 @@ nav a:hover {
 .card {
     background: white;
     padding: 25px;
-    border-radius: 20px; /* 角をより丸く */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); /* 影を柔らかく */
+    border-radius: 20px;
+    /* 角をより丸く */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    /* 影を柔らかく */
     border: 1px solid rgba(0, 0, 0, 0.03);
 }
 
 /* ボタンをモダンなグラデーションに */
-button, .submit-btn {
+button,
+.submit-btn {
     background: linear-gradient(135deg, #4361ee 0%, #3f37c9 100%);
     color: white;
     border: none;
@@ -68,14 +73,17 @@ button, .submit-btn {
     transition: 0.3s;
 }
 
-button:hover, .btn-live2d:hover {
+button:hover,
+.btn-live2d:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
-    opacity: 1; /* 透明度を下げる代わりに動きをつける */
+    opacity: 1;
+    /* 透明度を下げる代わりに動きをつける */
 }
 
 /* 削除ボタンは赤系のグラデーションに */
-.delete-btn, button[onclick*="delete"] {
+.delete-btn,
+button[onclick*="delete"] {
     background: linear-gradient(135deg, #ef476f 0%, #d90429 100%);
     box-shadow: 0 4px 15px rgba(239, 71, 111, 0.3);
 }
@@ -83,7 +91,8 @@ button:hover, .btn-live2d:hover {
 /* --- テーブルのブラッシュアップ --- */
 table {
     border-radius: 12px;
-    overflow: hidden; /* 角丸を効かせる */
+    overflow: hidden;
+    /* 角丸を効かせる */
 }
 
 th {
@@ -103,7 +112,7 @@ td {
 #liver-grid-container {
     display: grid;
     /* 画面幅に合わせてカードの枚数を自動調整 */
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 25px;
     margin-top: 30px;
 }
@@ -122,7 +131,7 @@ td {
 
 .liver-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
 }
 
 .input-row {
@@ -152,18 +161,31 @@ td {
     border: 1px dashed #cbd5e0;
 }
 
+.status-online {
+    color: #2ecc71;
+}
+
+/* 緑 */
+.status-offline {
+    color: #95a5a6;
+}
+
+/* グレー */
+
 /* --- レスポンシブ設定--- */
 /* タブレット・PC向け (横幅 768px 以上) */
 @media (min-width: 768px) {
     nav {
-        width: 200px; /* PCではメニューを固定幅に */
+        width: 200px;
+        /* PCではメニューを固定幅に */
     }
 }
 
 /* スマホ向け (横幅 767px 以下) */
 @media (max-width: 767px) {
     body {
-        flex-direction: column; /* メニューを上に、コンテンツを下に並べる */
+        flex-direction: column;
+        /* メニューを上に、コンテンツを下に並べる */
     }
 
     nav {
@@ -176,6 +198,7 @@ td {
     }
 
     #liver-grid-container {
-        grid-template-columns: 1fr; /* スマホではカードを1列にする */
+        grid-template-columns: 1fr;
+        /* スマホではカードを1列にする */
     }
-}   
+}

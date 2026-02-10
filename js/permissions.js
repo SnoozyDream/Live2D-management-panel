@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   try {
     // 全ライバーを取得
     const querySnapshot = await getDocs(collection(db, "livers"));
-    
+
     // 衣装データを取得（outfitsコレクションを指定）
     const outfitsSnapshot = await getDocs(collection(db, "outfits"));
     const allOutfits = [];
@@ -42,11 +42,16 @@ document.addEventListener('DOMContentLoaded', async function () {
         .filter(outfit => outfit.liverName === liver.name)
         .map(outfit => outfit.name);
 
+
+      // バッジの判定（myAssetsの中身があるかどうかで色と文字を変える）
+      const statusLabel = myAssets.length > 0 ? '● 利用可能' : '○ 衣装なし';
+      const statusClass = myAssets.length > 0 ? 'status-online' : 'status-offline';
+
       const assetsText = myAssets.length > 0 ? myAssets.join(', ') : 'なし';
 
       htmlContent += `
         <div class="liver-card">
-            <div class="status-badge">● 利用可能</div>
+            <div class="status-badge ${statusClass} ">${statusLabel}</div>
             <h3>${liver.name}</h3>
             <div class="info">
                 <p>所有衣装: <strong>${assetsText}</strong></p> 
