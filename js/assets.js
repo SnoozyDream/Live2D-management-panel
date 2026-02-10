@@ -71,7 +71,7 @@ async function loadModels() {
                 const data = doc.data();
                 return `
                     <li class="model-item" data-id="${doc.id}" style="cursor:pointer; ${doc.id === currentActive ? 'background:#d1e7ff;' : ''}">
-                        <span>${data.name}</span> <button class="delete-btn" data-id="${doc.id}">削除</button>
+                        <span>${data.liverName}</span> <button class="delete-btn" data-id="${doc.id}">削除</button>
                     </li>`;
             }).join('');
 
@@ -97,14 +97,15 @@ if (assetForm) {
         } catch { return alert("モデルのパスが正しくありません"); }
         */
        
+        /*衣装情報作成*/
         const outfitId = crypto.randomUUID();
         const dataToSave = {
-            id: outfitId,
-            liverId: currentLiverId,
-            liverName: currentLiverName,
-            name: nameValue,
-            modelURL: urlValue,
-            createdAt: serverTimestamp()
+            id: outfitId, //衣装ID
+            liverId: currentLiverId, //ライバーIDと紐付け
+            liverName: currentLiverName, //ライバー名と紐付け
+            name: nameValue, //衣装名
+            modelURL: urlValue, //モデルのURLを登録(DBと紐付けする前提)
+            createdAt: serverTimestamp() //衣装を作成したサーバー時間
         };
 
         try {
@@ -136,7 +137,7 @@ async function changeClothes(id) {
         if (!docSnap.exists()) return;
         const data = docSnap.data();
         setSelectedModel(id);
-        alert(`${data.name} に着替えました！`);
+        alert(`${data.liverName} に着替えました！`);
         loadModels();
         refreshDisplay();
     } catch (e) { console.error("着替えエラー:", e); }

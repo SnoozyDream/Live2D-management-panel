@@ -37,10 +37,10 @@ document.addEventListener('DOMContentLoaded', async function () {
     for (const liverDoc of querySnapshot.docs) {
       const liver = liverDoc.data();
 
-      // このライバーの名前(liver.name)と、衣装データの(outfit.liver)を紐付け
+      // このライバーの名前(liver.liverName)と、衣装データの(outfit.liverName)を紐付け
       const myAssets = allOutfits
-        .filter(outfit => outfit.liverName === liver.name)
-        .map(outfit => outfit.name);
+        .filter(outfit => outfit.liveName === liver.liverName)
+        .map(outfit => outfit.liverName);
 
 
       // バッジの判定（myAssetsの中身があるかどうかで色と文字を変える）
@@ -52,14 +52,14 @@ document.addEventListener('DOMContentLoaded', async function () {
       htmlContent += `
         <div class="liver-card">
             <div class="status-badge ${statusClass} ">${statusLabel}</div>
-            <h3>${liver.name}</h3>
+            <h3>${liver.livername}</h3>
             <div class="info">
                 <p>所有衣装: <strong>${assetsText}</strong></p> 
                 <p style="font-size: 0.8rem; color: #888;">ID: ${liver.id ? liver.id.substring(0, 8) : 'unknown'}...</p>
             </div>
             <div class="actions">
-                <a href="assets.html?liver=${liver.name}&id=${liver.id}" class="btn-live2d" style="flex: 1; text-decoration: none; text-align: center; line-height: 40px;">Live2D設定</a>
-                <button class="delete-btn" onclick="deleteLiver('${liver.name}','${liver.id}')" style="flex: 0 0 auto;">削除</button>
+                <a href="assets.html?liver=${liver.liverName}&id=${liver.id}" class="btn-live2d" style="flex: 1; text-decoration: none; text-align: center; line-height: 40px;">Live2D設定</a>
+                <button class="delete-btn" onclick="deleteLiver('${liver.liverName}','${liver.id}')" style="flex: 0 0 auto;">削除</button>
             </div>
         </div>`;
     }
@@ -79,10 +79,10 @@ async function addLiver(name) {
     const liverId = crypto.randomUUID();
     await setDoc(doc(db, "livers", liverId), {
       id: liverId,
-      name: name,
+      liverName: liverName,
       createdAt: serverTimestamp()
     });
-    alert(`${name} さんを登録しました！`);
+    alert(`${liverName} さんを登録しました！`);
 
     const inputField = document.getElementById('new-liver-name');
     if (inputField) inputField.value = '';
