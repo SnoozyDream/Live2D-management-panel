@@ -42,7 +42,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         .filter(outfit => outfit.liveName === liver.liverName)
         .map(outfit => outfit.liverName);
 
-
       // バッジの判定（myAssetsの中身があるかどうかで色と文字を変える）
       const statusLabel = myAssets.length > 0 ? '● 利用可能' : '○ 衣装なし';
       const statusClass = myAssets.length > 0 ? 'status-online' : 'status-offline';
@@ -53,7 +52,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         <div class="liver-card">
             <div class="status-badge ${statusClass} ">${statusLabel}</div>
             <h3>${liver.liverName}</h3>
-            console.log("今のライバーデータ:", liver);
             <div class="info">
                 <p>所有衣装: <strong>${assetsText}</strong></p> 
                 <p style="font-size: 0.8rem; color: #888;">ID: ${liver.id ? liver.id.substring(0, 8) : 'unknown'}...</p>
