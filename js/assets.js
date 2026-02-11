@@ -41,7 +41,7 @@ async function registerLiver(liverName) {
         const liverId = crypto.randomUUID();
         await setDoc(doc(db, "livers", liverId), {
             id: liverId,
-            name: liverName,
+            livername: liverName,
             createdAt: serverTimestamp(),
             mainOutfitId: null
         });

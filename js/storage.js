@@ -10,13 +10,13 @@ const LIVER_MODELS = {
 };
 
 // --- 関数: ライバー名からモデルのパスを返す ---
-export function getModelPath(name) {
-    const path = LIVER_MODELS[name];
+export function getModelPath(liverName) {
+    const path = LIVER_MODELS[liverName];
     if (!path) {
-        console.warn(`警告: ${name} のパスが見つからないため、ゲスト用を表示します`);
+        console.warn(`警告: ${liverName} のパスが見つからないため、ゲスト用を表示します`);
         return LIVER_MODELS['ゲスト'];
     }
-    console.log(`成功: ${name} 用のパス [${path}] を採用しました`);
+    console.log(`成功: ${liverName} 用のパス [${path}] を採用しました`);
     return path;
 }
 
