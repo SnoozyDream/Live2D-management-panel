@@ -52,7 +52,8 @@ document.addEventListener('DOMContentLoaded', async function () {
       htmlContent += `
         <div class="liver-card">
             <div class="status-badge ${statusClass} ">${statusLabel}</div>
-            <h3>${liver.livername}</h3>
+            <h3>${liver.liverName}</h3>
+            console.log("今のライバーデータ:", liver);
             <div class="info">
                 <p>所有衣装: <strong>${assetsText}</strong></p> 
                 <p style="font-size: 0.8rem; color: #888;">ID: ${liver.id ? liver.id.substring(0, 8) : 'unknown'}...</p>
@@ -72,8 +73,8 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 });
 
-async function addLiver(name) {
-  if (!name) return alert("追加するライバー名を入力してください");
+async function addLiver(liverName) {
+  if (!liverName) return alert("追加するライバー名を入力してください");
 
   try {
     const liverId = crypto.randomUUID();
