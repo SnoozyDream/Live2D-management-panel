@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
       // このライバーの名前(liver.liverName)と、衣装データの(outfit.liverName)を紐付け
       const myAssets = allOutfits
-        .filter(outfit => outfit.liveName === liver.liverName)
+        .filter(outfit => outfit.liverName === liver.liverName)
         .map(outfit => outfit.liverName);
 
       // バッジの判定（myAssetsの中身があるかどうかで色と文字を変える）
@@ -96,9 +96,9 @@ async function addLiver(liverName) {
 // ボタンから呼び出せるように公開する
 window.addLiver = addLiver;
 
-async function deleteLiver(name, id) {
+async function deleteLiver(liverName, id) {
 
-  if (!window.confirm(`${name} さんを削除します。本当によろしいですか？`)) {
+  if (!window.confirm(`${liverName} さんを削除します。本当によろしいですか？`)) {
     return; // キャンセルされたらここで処理を終了
   }
 
