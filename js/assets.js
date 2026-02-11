@@ -71,7 +71,7 @@ async function loadModels() {
                 const data = doc.data();
                 return `
                     <li class="model-item" data-id="${doc.id}" style="cursor:pointer; ${doc.id === currentActive ? 'background:#d1e7ff;' : ''}">
-                        <span>${data.liverName}</span> <button class="delete-btn" data-id="${doc.id}">削除</button>
+                        <span>${data.outfitName}</span> <button class="delete-btn" data-id="${doc.id}">削除</button>
                     </li>`;
             }).join('');
 
@@ -103,7 +103,7 @@ if (assetForm) {
             id: outfitId, //衣装ID
             liverId: currentLiverId, //ライバーIDと紐付け
             liverName: currentLiverName, //ライバー名と紐付け
-            name: nameValue, //衣装名
+            outfitName: nameValue, //衣装名
             modelURL: urlValue, //モデルのURLを登録(DBと紐付けする前提)
             createdAt: serverTimestamp() //衣装を作成したサーバー時間
         };
