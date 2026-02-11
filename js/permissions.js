@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       // このライバーの名前(liver.liverName)と、衣装データの(outfit.liverName)を紐付け
       const myAssets = allOutfits
         .filter(outfit => outfit.liverName === liver.liverName)
-        .map(outfit => outfit.liverName);
+        .map(outfit => outfit.outfitName);
 
       // バッジの判定（myAssetsの中身があるかどうかで色と文字を変える）
       const statusLabel = myAssets.length > 0 ? '● 利用可能' : '○ 衣装なし';
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 <p style="font-size: 0.8rem; color: #888;">ID: ${liver.id ? liver.id.substring(0, 8) : 'unknown'}...</p>
             </div>
             <div class="actions">
-                <a href="assets.html?liver=${liver.liverName}&id=${liver.id}" class="btn-live2d" style="flex: 1; text-decoration: none; text-align: center; line-height: 40px;">Live2D設定</a>
+                <a href="assets.html?liver=${outfit.outfitName}&id=${liver.id}" class="btn-live2d" style="flex: 1; text-decoration: none; text-align: center; line-height: 40px;">Live2D設定</a>
                 <button class="delete-btn" onclick="deleteLiver('${liver.liverName}','${liver.id}')" style="flex: 0 0 auto;">削除</button>
             </div>
         </div>`;

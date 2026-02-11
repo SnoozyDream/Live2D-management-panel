@@ -137,14 +137,14 @@ async function changeClothes(id) {
         if (!docSnap.exists()) return;
         const data = docSnap.data();
         setSelectedModel(id);
-        alert(`${data.liverName} に着替えました！`);
+        alert(`${data.outfitName} に着替えました！`);
         loadModels();
         refreshDisplay();
     } catch (e) { console.error("着替えエラー:", e); }
 }
 
 async function deleteAction(id) {
-    if (!confirm('本当に削除します?')) return;
+    if (!confirm('本当に削除しますか?')) return;
     try {
         await deleteDoc(doc(db, 'outfits', id));
         if (getSelectedModel() === id) setSelectedModel('デフォルト');
