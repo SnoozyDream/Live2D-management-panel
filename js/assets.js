@@ -96,7 +96,7 @@ if (assetForm) {
             if (!res.ok) throw new Error();
         } catch { return alert("モデルのパスが正しくありません"); }
         */
-       
+
         /*衣装情報作成*/
         const outfitId = crypto.randomUUID();
         const dataToSave = {
